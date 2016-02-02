@@ -34,11 +34,29 @@
 \maketitle
 \section{Introduction}
 
-In geology sketching 2D section of the ground allow geologist to recorver its history by making assumption and hypothesis based on geological knowledge and rules. 
+In geology sketching 2D section of the ground allow geologist to recorver its history by making assumption and hypothesis based on geological knowledge and rules. Moreover by looking at the different layers and cracks, the geologist is able to expend or compress the ground to represent what it was like before sedimentation and tectonic movements. 
+However this methods is working under the assupmtion that sedimantary layers were in a horizontal configuration at the starting position. With this assumption several tools such as SLAMTec offer the possibility to simulate the compression of a sedimental section taking into account friction and erosion. The goal of this kind of foward simulation is to validate a story that had been recontructed from a present dating 2D cut and see if the result coincidate with it.
+In our case we will take a backward approach: starting from the present 2D section we will simulated the biggest range of plausible transitions beetween this section and the extended or compressed result which corresponds to the starting point in terms of chronology.
 
 \section{State of the art}
 
-\section{Contribution}
+Like highlighted before there exist several tools to extract the story from a 2D section. Moreover we can highlight UNKNOW which is basically a geometrical tool expending each block of the section, flatten it and stick it to its neighbour with corresponding layers attached. This tool allow us to unwrap a given section giving a plausible starting point because it is done manualy be a geologist expertise. 
+An other tool is SLAMTec which will take one or several starting point extracted thanks to the previous tool and replay foward the compression with parametrisable simulation. 
 
+\section{Our approach}
+
+As said before we want to take the backward option; starting from the present 2D cut we want to give all plausible backward animation that will result to an unwraped result like the UNKNOWN tool can provide. 
+The concatenation of all plausible senarios will take the form of a tree with the the current 2D cut as root and each edge will correspond to a dated topological event sush as cracks. In fact defining all the parameters that can generate a branch is the main goal and main difficulty of our approach; we can state the problematic like: What are the event and phenomenons that can create a new senario and thus a new branch in our tree ?
+The answer to this question as to be clarified as much as possible but will not be answered full as there are too much aspects to deal with. 
+Before talking about our first approach we must extract all the information we can from the cut; for instance to number of different layers (done by a line sweeping on the cut) and their age.
+For a first approach we will consider branches as to be a block sliding over a cracks giving $n!$ leaf in the tree (divided into n levels), so we care about the cracks apparition order. Regarding that order, we can try to cut some branches of the tree by  trying to see if we can give a first order to the cracks given the different sedimentations.
+However considering only the crack phenomenon is not enough, we have to take into account errosion and the different way of sedimentation in order to explain disapearing sediments or divied part of the same sediment.
+
+Regarding the animation modelisation we it will be done using VPaint data structures to represent 2D topologies combined with a physical model for each contour with will expend and slide around the crakck.
+It has to take into account several parameters that will be defined and will affect the displacement of a contour such as the density, the friction and other to define (such as erosion and sedimentation speed).
+
+\section{Validation}
+
+The validation will be done by simulating a real ground compression with a sand box.
 
 \end{document} 
