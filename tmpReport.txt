@@ -1,0 +1,79 @@
+Plan
+
+
+Abstract
+
+In this project we tackle the problem of restoring the complete history of a 2D geological 
+subsurface. It is represented by a 2D sketch and we will produce a backward animation, starting
+at the section current state going in the past while detecting and un-doing geological events
+that possibly occured throught its history. Several scenarios will be taken into account while keeping
+only the most plausible ones. The animation is the result of running a simulation using mass spring
+systems mapped on nthe different part of the cross-section.
+
+I) Introduction
+
+Hand-drawn sketches are useful in geology for illustrating and validating hypotheses. 
+For instance they can be used to reconstruct a 3D view of the subsurface by drawing a 2D top view of the current terrain (2) or 2D vertical cross-sections. 
+Futhermore they can also be used to restore the subsurface history using 2D slices (vertical cross-sections) Moreover by analysing the different layers and faults, the geologist is able to reconstruct the geometrical evolution specially provoqued by compression or extension of the rock masses before, after or during deposit and erosion of the sediments and basement rocks. 
+The resulting drawing is called a restoration ($ref$) (a single of sequential geometric description of the cross-section).
+However those drawings are rather limited. On top of representing only one 2D cross-section of the terrain being investigated, they can only represent hypotheses on the underground geometry at discrete time steps, rather than a complete continuous history. In addition insuring consistency between these sketches over time heavily depends on available data, maturity of the regional geological interpretation and the skills of the geologist, i.e. his knowledge on the way rocks and sediments fold, on the way faults propagates and produce sliding and displacements, and on the way sediments are deposited or eroded, etc...
+Building, Exploring and comparing different hypotheses of kinematic restoration is very difficult, if not impossible, with the current pipeline ($workflow$). 
+Recently, it was proposed to organize geological sketches into story trees to present and compare different interpretations of the formation of a given terrain (6) but the task remains labor-intensive, requiring the geologist to draw every sketch in the story tree. Moreover, even while being skillful and experienced, it’s hardly impossible to a geologist to express a continuum of the deformation of a geological cross-section with available tools.
+In this internship, we would like to follow up on this line of research by proposing methods for inferring a geological story tree directly from very few geological sketches, and presenting the resulting tree of possible geological stories as an animation.
+
+
+II) State of the Art
+
+
+
+III) Geological Structure Representation and Analysis
+	How do we represent a Cross Section.
+	A Cross-Section contains several parts : 
+		-It contains parts of geological layers => floors or moduli
+		- A geological layer is a layer composed of the same kind of material.
+		In our case we deal with sementary layers. It implies that each material is caracterized by its temporal existance.	
+	   	- Faults which can be seen as discontinuities in the XS
+		- Blocks which represent the groups of floors delimited by faults.
+		- Each Material is caracterised by a Young Modulus which describe its plasticy and elesticity,
+		an age period and a friction coefficient.
+	
+
+IV) Story Telling
+
+
+
+-Build a story graph of simulated events until no more event can be simulated (simulation end)
+-Use user information to reduce the complexity (eg: Materials’ages)
+-Use geological knowledge to reduce the complexity (eg: Fault hierarchy)
+-At least 5 events to simulate: fault playing, applying external forces (de-compression de-extension), compaction, sedimentation and erosion.
+
+-Two graphs to use in the story telling
+	- Event graph: show time dependencies between geological
+	events. An event is represented by a node and an edge
+	represents a dependency.
+	- Story graph: represents the event paths we can run the
+	simulation on. a node represents the list of event we can
+	simulate at time t and an edge represents the event simulated
+	between two nodes. Event graph used in the creation of this
+	graph.
+V) Simulation
+
+VI) Results
+
+VII) Conclusion
+
+glossary
+	
+Faults: extensive, inverse (compress), décrochement
+
+Floor, Modulus.
+
+Blocks;
+
+Cross section, 2D slice.
+
+Material.
+
+Young Modulus.
+
+Event: unFolding, unErode, unSediment, un
