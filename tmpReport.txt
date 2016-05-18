@@ -40,7 +40,16 @@ III) Geological Structure Representation and Analysis
 
 IV) Story Telling
 
+As we mentionned before, geologist are usually able to restore the history of the cross section by using several geometrical and simulation tools.
+However then only get one final state of the section whcih represents what was the XS before any techtonic movement. Here we are interested in what 
+happened between today XS and the restoration. Indeed most of the time there are several scenarios that lead the initial state to the restoration.
+This is what we want in this project. We want to explore the most plausibles scenarios and see the resulting animation of exploration.
+To do so we wiil propose to the user to undo geological events at each time step. We can count already five events to undo : faults, erosion, sedimentation, folding and compaction. Those event will be automatically detected and resbored. In order to solve the issue properlly we'll use two graphs:
+	-Story graph
+	-Event graph
 
+The Story graph represents the event paths we can run the simulation on. a node represents the list of event we can simulate at time t and an edge represents the event simulated between two nodes. Event graph used in the creation of this graph. It is the graph the user will explorer to see the animation of as many scenarios he wants to see.
+Each event has a pre condition and and postcondition and will finish in a state.
 
 -Build a story graph of simulated events until no more event can be simulated (simulation end)
 -Use user information to reduce the complexity (eg: Materials’ages)
@@ -51,11 +60,7 @@ IV) Story Telling
 	- Event graph: show time dependencies between geological
 	events. An event is represented by a node and an edge
 	represents a dependency.
-	- Story graph: represents the event paths we can run the
-	simulation on. a node represents the list of event we can
-	simulate at time t and an edge represents the event simulated
-	between two nodes. Event graph used in the creation of this
-	graph.
+	- Story graph: 
 V) Simulation
 
 VI) Results
