@@ -24,7 +24,9 @@ In this internship, we would like to follow up on this line of research by propo
 
 II) State of the Art
 
-
+Like mentioned above, several continuous animation tools for subsurface evolution over time are already available. They work on the assumption that sedimentary layers were in a horizontal configuration at the starting position which is a well used hypothesis in geology. With this assumption and using the Coulomb prism theory ($ref$) sofware such as SLAMTec or OptumG2 (refs ?) offer the possibility to mechanically simulate the compression of a geological cross-section.
+The goal of this kind of forward simulation is to validate a restoration that had been generated from a present dating 2D section and see if the result matches with it. This kind of simulation is configurable by several parameters such as the erosion and the friction coefficients.
+Geological cross-section restoration can be obtained thanks to geometrical tools (refs ?). Those tools deal with each block (soil section between two faults) one by one and flatten each layer while conserving their respective area or length. After the flattening operation the user can manually stick the new block to its neighbours with the corresponding layers facing each other. Here is an example of restoration taken from Chartreuse slice:
 
 III) Geological Structure Representation and Analysis
 	How do we represent a Cross Section.
@@ -36,6 +38,13 @@ III) Geological Structure Representation and Analysis
 		- Blocks which represent the groups of floors delimited by faults.
 		- Each Material is caracterised by a Young Modulus which describe its plasticy and elesticity,
 		an age period and a friction coefficient.
+
+Drawing analysis. As Mentionned before our input is a colored vpaint drawing which is composed of face, edges and vetices stored in 
+a vertex complex graphics strucutre ($ref$). Passage du sujet.
+In the drawing we color faces which represent the different moduli of the XS with the color being its material. moduli of the same color have the same material, therefore they belong to the same layer. We represent interlayers by a white edge while the other contour egades are black. Gaps inside a block are also represented in white and are automatically detected as gaps meaning that erosion impacted this region for sure. line could be added to give hint on the rosion.
+
+Then we have to extract the structure out of this drawing. Meaning that we have to identify the different blocks, moduli, faults and materials from the drawing. To do so we proceed this way: the vpaint output format is an xml file which describe our drawing in terms
+of faces, edges and vertices. Each faces has a cycling orientation which is clockwise or counterclockwise but for building and manipulating our structure more easelly we choose that all of our layer will be first read clockwiselly and from the most recent (the higher in general) to the oldest. In fact it is an easy task to wirte the layers in the correct way but we need to find out which layers belong to the same block. To solve this issue we will use the interlayers and then the white edges. Two layers belong to the same block if they share a commun white edge. Thanks to this method we build our blocks. we can notice that the youngest and the oldest layer have just one interlayer that make them part of a block. However we will describe our layer with four part of the contours the upper interlayer, the righedges, the bottom interlayer and the left edges. Consequently for these two specific layer we will compute automatically the lacking interlayer (limitation it is not always good).
 	
 
 IV) Story Telling
@@ -49,7 +58,26 @@ To do so we wiil propose to the user to undo geological events at each time step
 	-Event graph
 
 The Story graph represents the event paths we can run the simulation on. a node represents the list of event we can simulate at time t and an edge represents the event simulated between two nodes. Event graph used in the creation of this graph. It is the graph the user will explorer to see the animation of as many scenarios he wants to see.
+
 Each event has a pre condition and and postcondition and will finish in a state.
+Also a event can be have the special property to be dynamic meaining that it will be created during the simulation and not at 
+the graphs creation.
+
+The event graph shows time dependencies between geological events. An event is represented by a node and an edge represents a dependency. It is also computed automatically but it can be edited using information provided by the user. Has it contains only dpendencies
+
+Only 4 out of the 5 event have been treated, the compaction will be reserved for later.
+Describe the 4 events:
+
+
+Faults: subdivided into modulus event
+
+Erode: two types
+
+Sediment:
+
+Fold:
+
+
 
 -Build a story graph of simulated events until no more event can be simulated (simulation end)
 -Use user information to reduce the complexity (eg: Materials’ages)
@@ -57,9 +85,7 @@ Each event has a pre condition and and postcondition and will finish in a state.
 -At least 5 events to simulate: fault playing, applying external forces (de-compression de-extension), compaction, sedimentation and erosion.
 
 -Two graphs to use in the story telling
-	- Event graph: show time dependencies between geological
-	events. An event is represented by a node and an edge
-	represents a dependency.
+	- Event graph: 
 	- Story graph: 
 V) Simulation
 
