@@ -101,105 +101,79 @@ $[$Prof/Dr/Mrs/Mr$]$ $<$first-name last-name$>$\\
 \maketitle
 \end{titlingpage}
 
-Abstract
+\section{Abstract}
 
 In this project we tackle the problem of restoring the complete history of a 2D geological 
-subsurface. It is represented by a 2D sketch and we will produce a backward animation, starting
+subsurface also calls a cross-section. It is represented by a 2D sketch and we will produce a backward animation on it, starting
 at the section current state going in the past while detecting and un-doing geological events
-that possibly occured throught its history. Several scenarios will be taken into account while keeping
-only the most plausible ones. The animation is the result of running a simulation using mass spring
-systems mapped on nthe different part of the cross-section.
+that possibly occured throught its history. \\
+Several scenarios will be taken into account while keeping only the most plausible ones. The animation is the result of running a simulation using mass spring systems mapped on the different part of the cross-section.
 
-I) Introduction
+\section{Introduction}
 
-Hand-drawn sketches are useful in geology for illustrating and validating hypotheses. 
-For instance they can be used to reconstruct a 3D view of the subsurface by drawing a 2D top view of the current terrain (2) or 2D vertical cross-sections. 
-Futhermore they can also be used to restore the subsurface history using 2D slices (vertical cross-sections) Moreover by analysing the different layers and faults, the geologist is able to reconstruct the geometrical evolution specially provoqued by compression or extension of the rock masses before, after or during deposit and erosion of the sediments and basement rocks. 
-The resulting drawing is called a restoration (ref) (a single of sequential geometric description of the cross-section).
-However those drawings are rather limited. On top of representing only one 2D cross-section of the terrain being investigated, they can only represent hypotheses on the underground geometry at discrete time steps, rather than a complete continuous history. In addition insuring consistency between these sketches over time heavily depends on available data, maturity of the regional geological interpretation and the skills of the geologist, i.e. his knowledge on the way rocks and sediments fold, on the way faults propagates and produce sliding and displacements, and on the way sediments are deposited or eroded, etc...
-Building, Exploring and comparing different hypotheses of kinematic restoration is very difficult, if not impossible, with the current pipeline (workflow). 
+Hand-drawn sketches are very used in geology for illustrating and validating hypotheses. It is the main way of keeping and showing geological data. Indeed, showing an image of what we have in mind is a really good way to convey our thoughts, especially here in geology where we can draw from multiple points of view. Futhermore geologists write lots anotations on their drawing to give more hints and be more specific in the information they want to show in their sketchs. 
+For instance sketches can be used to reconstruct a 3D view of the subsurface by drawing a 2D top view of the current terrain (2) and using anotations or to represent 2D vertical cross-sections. \\\\
+
+However anotations are limited in explaining what happened in the past, it is difficult to anotate the past of the geological representation on a single sketches. Therefore geologists must draw several sketches when they whant to show the history of a terrain. \\\\
+
+This exaclty what they do when they want to do cross section restoration (ref). It consists in drawing several sketches of the same cross section at different time steps starting from the its current state.  A cross section is composed of several geological elements especially blocks, layers and faults. The layers they draw correspond to different sedimentary layers that have deposited  along history. The faults correspong to breaks in the section and create discontinuities in it. They can be of three types:
+. However as we are in the 2D vertical case we are only interesed in the inverse and normal faults. Finally blocks correspond to parts of the section which are between two faults or one fault and on boundary of the sketch. 
+Here is an exemple of a geological skecth (eg): 
+
+
+The current state of the cross section is the result of several geological phenomena such as erosion, foldings, sedimentations, fault impacts, etc..., which occured in the past at different time. Consequently, restoring a cross section can differ depending on the geologist point of view.
+However using the initial sketch  and geometrical tools (ref) geologists are able to draw the past state of the cross section before any erosion, fault and sediment events and this restoration is usually unique and doesn't differ much between geologist.An analysis of the different layers and faults usually lead to the same geometrical evolution reconstruction which has been provoqued by compression or extension of the rock masses before, after or during deposit and erosion of the sediments and basement rocks. \\\\
+
+The main problem geologist are facing in this restoration is to find (deduce) what really happened to go from the current state to the past one. They have two things to identify. First they have to find all the events that occured from the past to the current state. Then they have to find in with order they occured because it is possible that even when changing the event order we obtain the same restoration at the end. Futhermore it is possible to find the same restoration having identifying different events in two different hypothesis. \\\\
+
+Consequently geologists have to draw lots of sketches in order to expose their hypothesis. In addtition those drawings are rather limited: on top of representing only one 2D cross-section of the terrain being investigated, they can only represent hypotheses on the underground geometry at discrete time steps, rather than a complete continuous history. Futhermore insuring consistency between these sketches over time heavily depends on available data, maturity of the regional geological interpretation and the skills of the geologist, i.e. his knowledge on the way rocks and sediments fold, on the way faults propagates and produce sliding and displacements, and on the way sediments are deposited or eroded, etc...\\\\
+
+
 Recently, it was proposed to organize geological sketches into story trees to present and compare different interpretations of the formation of a given terrain (6) but the task remains labor-intensive, requiring the geologist to draw every sketch in the story tree. Moreover, even while being skillful and experienced, it’s hardly impossible to a geologist to express a continuum of the deformation of a geological cross-section with available tools.
-In this internship, we would like to follow up on this line of research by proposing methods for inferring a geological story tree directly from very few geological sketches, and presenting the resulting tree of possible geological stories as an animation.
+In this internship, we would like to follow up on this line of research by proposing methods for inferring a geological story tree directly from one geological sketch, and presenting the resulting tree of possible geological stories as an animation.\\\\
 
+\section{State of the Art}\\
 
-II) State of the Art
+Several solutions of very different kind have been proposed to solve the problem of correctly exposing many restoration hypothesis without inconsistencies and without spending too much time creating them. We distinguish two types of solutions: the geometrical ones and the mecanical ones.\\\\
 
-Like mentioned above, several continuous animation tools for subsurface evolution over time are already available. They work on the assumption that sedimentary layers were in a horizontal configuration at the starting position which is a well used hypothesis in geology. With this assumption and using the Coulomb prism theory (ref) sofware such as SLAMTec or OptumG2 (refs ?) offer the possibility to mechanically simulate the compression of a geological cross-section.
-The goal of this kind of forward simulation is to validate a restoration that had been generated from a present dating 2D section and see if the result matches with it. This kind of simulation is configurable by several parameters such as the erosion and the friction coefficients.
+Geometrical solutions consist in assuring only geometrical consistancy when exposing the solution while mecanical ones consist in running a physical simulation over the past cross section and see if the animation created confirm the hypothesis.
+
+\section{Geometrical solutions}
+
+Like mentionned above Lidal (ref) proposed a solution using trees to organize their resoning. Starting from the initial drawing the geologist can draw several stories where each node of the tree conctains a new sketch. However it is possible to (supperpose) the previous drawing to the new one helping keeping geometrical consitancy and reducing conciderably the time spent for drawing. Futhermore as geologists use usually seismic recording to draw the starting drawing, having this recording in background really help them in being consitent. As a result with fewer sketches and less time spent drawing, geologists  (see eg) can express their ideas better than with traditionnal sketching. Futhermore this tool is really efficient when exploring diifferent hypothesis because at each node we can create another branch to explore a new possibility and thus they can either refined their animation or try different scenarios. \\\\
+
+However this solution doesn't necessarely keep the topological consistancy of drawing unless the geologist spend more time being carefull of having precise topological consistant drawings. This topological aspect can be important when validating hypothesis especially when they restore very old cross sections and the topology of the terrain undewent drastic changes(exemples?).
+
+Recently VAC and VGC proposed a solution to have space-time topological consistancy in 2D drawings. More precisely it propose a solution for inbetweening two drawings of the same model which underwent topological changes. The fondation of the technique is the data structure VGC which has been shown to model all possible incidence relations between vertices, edges and faces in 2D sketches. Then the VAC are used to describe all possible changes in the topology of a vector graphic complex over time.
+
+Other geometrical tools such as (ref) are used  to produce the restoration. They use geometrical properties of the drawing such as area conservations and so on.....
+
+\section{Physical solutions}
+
+Like mentioned above, several continuous animation tools for subsurface evolution over time are already available. They work on the assumption that sedimentary layers were in a horizontal configuration at the starting position which is a well used hypothesis in geology. \\\\
+
+With this assumption and using the Coulomb prism theory (ref) sofware such as SLAMTec or OptumG2 (refs ?) offer the possibility to mechanically simulate the compression of a geological cross-section.
+The goal of this kind of forward simulation is to validate a restoration that had been generated from a present dating 2D section and see if the result matches with it. This kind of simulation is configurable by several parameters such as the erosion and the friction coefficients.\\\\
+
 Geological cross-section restoration can be obtained thanks to geometrical tools (refs ?). Those tools deal with each block (soil section between two faults) one by one and flatten each layer while conserving their respective area or length. After the flattening operation the user can manually stick the new block to its neighbours with the corresponding layers facing each other. Here is an example of restoration taken from Chartreuse slice:
+\\
+\section{Our Solution}
 
-III) Geological Structure Representation and Analysis
-	How do we represent a Cross Section.
-	A Cross-Section contains several parts : 
-		-It contains parts of geological layers => floors or moduli
-		- A geological layer is a layer composed of the same kind of material.
-		In our case we deal with sementary layers. It implies that each material is caracterized by its temporal existance.	
-	   	- Faults which can be seen as discontinuities in the XS
-		- Blocks which represent the groups of floors delimited by faults.
-		- Each Material is caracterised by a Young Modulus which describe its plasticy and elesticity,
-		an age period and a friction coefficient.
+Unlike forward animation techniques which use a restoration and run a mechanical simulation over it, we will run an inverse modeling animation on the current 2D section and compare it visually to the provided restoration. In order to explore a reasonable number of geological scenarios we will encode them into an interactive story tree.\\\\
 
-Drawing analysis. As Mentionned before our input is a colored vpaint drawing which is composed of face, edges and vetices stored in 
-a vertex complex graphics strucutre (ref). Passage du sujet.
-In the drawing we color faces which represent the different moduli of the XS with the color being its material. moduli of the same color have the same material, therefore they belong to the same layer. We represent interlayers by a white edge while the other contour egades are black. Gaps inside a block are also represented in white and are automatically detected as gaps meaning that erosion impacted this region for sure. line could be added to give hint on the rosion.
+We first provide one possible scenario to the user making the story tree taking the form of a line. Starting from that point the user can decide to create another branch from any node and explore a new scenario. Each node of the tree will corresponds to a discrete topological event such as faults which can be dealt using a similar approach to (3). This means that between two consecutive node levels we will simulate the consequence of this event. Thus the tree banches will correspond to the continuous animation of the soil change caused by the end node event of the branch.\\\\
 
-Then we have to extract the structure out of this drawing. Meaning that we have to identify the different blocks, moduli, faults and materials from the drawing. To do so we proceed this way: the vpaint output format is an xml file which describe our drawing in terms
-of faces, edges and vertices. Each faces has a cycling orientation which is clockwise or counterclockwise but for building and manipulating our structure more easelly we choose that all of our layer will be first read clockwiselly and from the most recent (the higher in general) to the oldest. In fact it is an easy task to wirte the layers in the correct way but we need to find out which layers belong to the same block. To solve this issue we will use the interlayers and then the white edges. Two layers belong to the same block if they share a commun white edge. Thanks to this method we build our blocks. we can notice that the youngest and the oldest layer have just one interlayer that make them part of a block. However we will describe our layer with four part of the contours the upper interlayer, the righedges, the bottom interlayer and the left edges. Consequently for these two specific layer we will compute automatically the lacking interlayer (limitation it is not always good).
-	
+However discrete geological events are not the only phenomena we have to consider in order to represent all the plausible scenarios. Indeed continuous events such as erosion and sedimentation have to be taken into account. Those events will be integrated into the tree as branches.
+More phenomena may be added during the internship but we have to be careful to not produce too many scenarios that are not relevent, therefore the number of considered phenomena should be moderated. However the number of unrelevent scenarios can be reduced by taking into account more geological laws that will restrict node and branch creations.
+Thus at each node and branch creation, the user can only choose events among a restricted range. This property is important because it is time saving for geologists who want to see only the most plausible scenarios. In addition methods proposed for controlling the number of branches in the story tree (7) will be adapted for this geological case.\\\\
 
-IV) Story Telling
+Before generating the tree we will extract all the information we can from the 2D section, that is to say the number of layers, their age, the already determined eroded zones and so on.\\\\
 
-As we mentionned before, geologist are usually able to restore the history of the cross section by using several geometrical and simulation tools.
-However then only get one final state of the section whcih represents what was the XS before any techtonic movement. Here we are interested in what 
-happened between today XS and the restoration. Indeed most of the time there are several scenarios that lead the initial state to the restoration.
-This is what we want in this project. We want to explore the most plausibles scenarios and see the resulting animation of exploration.
-To do so we wiil propose to the user to undo geological events at each time step. We can count already five events to undo : faults, erosion, sedimentation, folding and compaction. Those event will be automatically detected and resbored. In order to solve the issue properlly we'll use two graphs:
-	-Story graph
-	-Event graph
+As geological structures can have a rather complex topology, the 2D section will be presented as a vector graphics complex representation (4) drawn using vpaint software like in Figure 3. This data structure has been shown to model all possible incidence relations between vertices, edges and faces in 2D sketches. More structures derivating from vector graphics complex will be implemented in order to take into account the geological aspect of the sketch.\\\\
 
-The Story graph represents the event paths we can run the simulation on. a node represents the list of event we can simulate at time t and an edge represents the event simulated between two nodes. Event graph used in the creation of this graph. It is the graph the user will explorer to see the animation of as many scenarios he wants to see.
+The inverse modeling animation will be done on top of the vector animation complex structure (5) which is used to describe all possible changes in the topology of a vector graphic complex over time. This method will require prior information about several geological parameters that will affect the animation such as materials’ density, friction coefficients and others like erosion and sedimentation speeds.\\\\\
 
-Each event has a pre condition and and postcondition and will finish in a state.
-Also a event can be have the special property to be dynamic meaining that it will be created during the simulation and not at 
-the graphs creation.
-
-The event graph shows time dependencies between geological events. An event is represented by a node and an edge represents a dependency. It is also computed automatically but it can be edited using information provided by the user. Has it contains only dpendencies
-
-Only 4 out of the 5 event have been treated, the compaction will be reserved for later.
-Describe the 4 events:
-
-
-Faults: subdivided into modulus event
-	Our XS contains what is called fault which corresponds to the breaking of a block into two parts and only two parts. Geologically speaking when a fault begin to open, it splits the block starting by the oldest moduli that is to say from bottom to up. 
-	
-	We will use this property to decompose our un fault event into several stickModulus events. As we just said the fault split the block into two parts (which are new blocks) and one part is inevitably above the other in terms of y coordinates. Meaning that the corners of each modulus of the upper block is higher than the respecting corners of each modulus of the lower block (see the exemple below). 
-	
-	As a result the modulus event will correspond to applying forces to the lower block in order to unfold it and make the upper modulus converging to the respecting modulus and then stick together the two moduli when they face each other in terms of y coordinates.
-	
-	Once all moduli event have ended the fault event can end as well.
-	
-	The preconditions are: the fault must concern two blocks and only two blocks. Some faults take root on other ones making them in contact of more than two blocks. 
-	
-	The posconditions are: all the modulus events ended mening that all the moduli that should have be stuck together are now merged into one modulus. That implies that the two concerned blocks merged and the mass spring mesh should be regenerated for better uniformity 
-
-Erode: three types of erosion
-	We can identify 3 types of unErode events
-
-Sediment:
-
-	The preconditions are: if we un sediment one material in all the blocks
-	we all the material younger that this one should ahve been unSedimented already. If it is just one molulus we should also check if inside its block there are  no modulus with a material younger than the material of the modulus we want to unSediment.
-	
-	the postconditions are: the un sedimentation has a duration htat should comes to an end to finish and at the end of the time the concerned moduli should have been erased from the XS. also the massSpring mesh should be reGenerated at the end of the event in order to uniformise the new state of the XS.
-
-Fold:
-	The preconditions are: there are no precondition for this event. the user is free to play with this event as it allows geologists to test their hypothesis on forces that have been applied to the XS in the past and with a duration.
-	
-	The posconditions are: the event no longer apply forces on the concerned particles
-	
-
-
-V) Simulation
+\section{Continuous Simulation}
 
 \section{General Overview}
 
@@ -215,6 +189,7 @@ As the first proposed story tree is computed fully automaticaly it may not show 
 This way the user can construct all the plausible stories he wants.
 
 \section{General structure}
+
 One important matter in our model is to choose carefully the representation of our slices as it will affect how we will animate it.
 We choose one possible representation of a geological slice but we are aware that some part of this structure can be modified through the project progression.\\\\
 Similary to the drawing a slice is composed of blocks, faults and erosion lines. It also contains a list of all the materials composing the different layers.This list will be usefull when we want to see if one material disappeared from one block. Each blocks is composed of layers and interlayers lines. Knowing all the interlayers is important to link the layer mapping together (see Animation Model section).\\\\
@@ -325,10 +300,131 @@ Having this physical structure we will simulate extension and take into account 
 Regarding the extension simulation we will first pull the side where the extension has to occur. This is known before simulating because it is provided by the user. At each time step we will freeze the animation of all the blocks, translate them toward extension apply the physics only to the blocks which are considered to move. The blocks moving undergo either discrete geological event (such as fault) or/and continuous event (erosion or sedimentation). When solving fault apparition we have to stick blocks together. This will be done by attaching corners of the layers when the matching ones are near each other enough. When all the corners are matched we have a new block where we must recompute a new mass spring system.\\\\
 Computing a mass spring system can take some time (few seconds for big systems) and can be noticable especially during block fusion but that is not a problem because the goal of the project is to record at each time step the result of our simulation as an inbetween vac which can be played fluently.\\\\
 
+\section{Dealing With Discrete Geological Events}\\
+
+As we mentionned before, geologist are usually able to restore the history of the cross section by using several geometrical and simulation tools.
+However then only get one final state of the section whcih represents what was the XS before any techtonic movement. Here we are interested in what 
+happened between today XS and the restoration. Indeed most of the time there are several scenarios that lead the initial state to the restoration.
+This is what we want in this project. We want to explore the most plausibles scenarios and see the resulting animation of exploration.
+To do so we will propose to the user to undo geological events at each time step. We can count already five events to undo : faults, erosion, sedimentation, folding and compaction. Those event will be automatically detected and resbored. In order to solve the issue properlly we'll use two graphs:
+	-Story graph
+	-Event graph
+
+The Story graph represents the event paths we can run the simulation on. a node represents the list of event we can simulate at time t and an edge represents the event simulated between two nodes. Event graph used in the creation of this graph. It is the graph the user will explorer to see the animation of as many scenarios he wants to see.
+
+Each event has a pre condition and and postcondition and will finish in a state.
+Also a event can be have the special property to be dynamic meaining that it will be created during the simulation and not at 
+the graphs creation.
+
+The event graph shows time dependencies between geological events. An event is represented by a node and an edge represents a dependency. It is also computed automatically but it can be edited using information provided by the user. Has it contains only dpendencies
+
+Only 4 out of the 5 event have been treated, the compaction will be reserved for later.
+Describe the 4 events:
+
+
+Faults: subdivided into modulus event
+	Our XS contains what is called fault which corresponds to the breaking of a block into two parts and only two parts. Geologically speaking when a fault begin to open, it splits the block starting by the oldest moduli that is to say from bottom to up. 
+	
+	We will use this property to decompose our un fault event into several stickModulus events. As we just said the fault split the block into two parts (which are new blocks) and one part is inevitably above the other in terms of y coordinates. Meaning that the corners of each modulus of the upper block is higher than the respecting corners of each modulus of the lower block (see the exemple below). 
+	
+	As a result the modulus event will correspond to applying forces to the lower block in order to unfold it and make the upper modulus converging to the respecting modulus and then stick together the two moduli when they face each other in terms of y coordinates.
+	
+	Once all moduli event have ended the fault event can end as well.
+	
+	-The preconditions are: the fault must concern two blocks and only two blocks. Some faults take root on other ones making them in contact of more than two blocks. 
+	
+	-The posconditions are: all the modulus events ended mening that all the moduli that should have be stuck together are now merged into one modulus. That implies that the two concerned blocks merged and the mass spring mesh should be regenerated for better uniformity 
+	
+	How it is done: The fault we want to close is dividing a block into two parts, with one being above the other. We know that the cause of the breaking was folding. Thus we apply to the lower block the exact opposite force that was applied during the folding. For instance if the force applied was a compression pointing toward the left we will apply a force toward the right. Furthermore we have to freeze the movement of the masses of the two concerned blocks that belongs to other faults because we don't want to close those ones yet. Thus if the lower block belongs to another fault the opposite force we apply we create a momentum on the block instead of a translation and will force it being in the same position before the breaking. At the same time the upper block will slowly slide on the lower block causing them to stick together when moduli are at the same high. In addition because of un-detected erosion and small folding events we have to add a additionnal force to the upper block which will make each modulus going toward its corresponding modulus in the lower block. To do so we apply attraction forces $\overrrightarrow{F} = d*\frac{\overrightarrow{(C_{lower} - C_{upper})} }{||\overrightarrow{(C_{lower} - C_{upper})}||}$to the corners of each modulus of the upper block going toward the corresponding corners of the matching modulus. Finally when all the matching moduli have stick together we regenerate the mass-spring system for uniformity sake.
+
+Erode: three types of erosion
+	We can identify 4 types of unErode events:
+		-unErode youngest moduli :
+			here we will search for concavities at the upperside of the youngest moduli and resobe them 
+			preconditions : the concerned modulus must be of the youngest material among its block, meaning it is the upper moduli.
+			postCondition : the concavities must have been resolved.
+			How it is done: Here we look at the upperlayer as being a discretized parametric curve $x(t),y(t)$ and we search for concavities. To do so we will compute the speed vector $x'(t),y'(t)$ and the acceleration vector $x''(t),y''(t)$ and look at the sign of $det(v(t),a(t))$. If it is negative it means that the curve is concave. Thus we search for every concave areas which are intervals $[t_1,t_2]$ where the the curve is concave. Then we have to correct each detected area. To do so we will use hermit curves with the following coefficients $I(t_0), I(t_1)$ which are the points at the beginning and the end of the concavity and $I(t_0) - I(t_0 - 1), I(t_1) - I(t_1 + 1)$  as tangent respectively at point $I(t_0)$ and point $I(t_1)$.Then we deform the current curve making it matching the computed hermit curve. By proceeding this way we will fill the concavities following the trajectory the curve should have if we un-erode it.
+			
+		- unErode modulus which is in a gap:
+			here we will search for up edges which are at the surface but which don't belong to the yongest modulus of the block. Meaning that those edges are the bottom of a hole which is the product of an erosion. We try to resobrbe matter that could have been eroded at those points.
+			
+			precondition : the modulus must have a edge at the surface without being the youngest modulus of its block
+			postcondition: the modulus has been corrected with matter being added.
+			How it is done: Here we will proceed the exact same way than the previous case except that we won't search for concavities at the upper interlayer but we will try to correct the curve whenever the curve is at the surface, meaning that it joins to corners of younger moduli which are of the same material composition. We will use the corners as starting and ending point of the curve and we will consider the tangent at those point the same way as we computed them previously. Here we don't search for concavities and try to correct the curve in any cases because we can assume than it the concerned modulus was eroded because the erosion divided the modulus jus above it at least in two parts.
+		- unErode sides of moduli:
+		
+			here we are interested at the erosion that happen at the side of moduli and we will also search for concavities in the side of moduli. However we will solve and detect concavities differently than the previous methods because we will take into account the geoloical aspect.
+			
+			precondition: no preconditions
+			postconditions: the side that has been unEroded must not collide with other moduli
+			How it is done:
+			
+		- unErode two moduli of the same material in the same block.
+		
+		precondition: 
+		pstconditions
+
+Sediment:
+
+	The preconditions are: if we un sediment one material in all the blocks
+	we all the material younger that this one should ahve been unSedimented already. If it is just one molulus we should also check if inside its block there are  no modulus with a material younger than the material of the modulus we want to unSediment.
+	
+	the postconditions are: the un sedimentation has a duration htat should comes to an end to finish and at the end of the time the concerned moduli should have been erased from the XS. also the massSpring mesh should be reGenerated at the end of the event in order to uniformise the new state of the XS.
+
+Fold:
+	The preconditions are: there are no precondition for this event. the user is free to play with this event as it allows geologists to test their hypothesis on forces that have been applied to the XS in the past and with a duration.
+	
+	The posconditions are: the event no longer apply forces on the concerned particles
+	
+
+\section{Ordonnancing Events}
+\section{Implementation}
+\section{Results}
+\section{Limitations}
+3D with more drawings
+Could have used clothoid
+\section{Conclusion}
+
+
+III) Geological Structure Representation and Analysis
+	How do we represent a Cross Section.
+	A Cross-Section contains several parts : 
+		-It contains parts of geological layers => floors or moduli
+		- A geological layer is a layer composed of the same kind of material.
+		In our case we deal with sementary layers. It implies that each material is caracterized by its temporal existance.	
+	   	- Faults which can be seen as discontinuities in the XS
+		- Blocks which represent the groups of floors delimited by faults.
+		- Each Material is caracterised by a Young Modulus which describe its plasticy and elesticity,
+		an age period and a friction coefficient.
+
+Drawing analysis. As Mentionned before our input is a colored vpaint drawing which is composed of face, edges and vetices stored in 
+a vertex complex graphics strucutre (ref). Passage du sujet.
+In the drawing we color faces which represent the different moduli of the XS with the color being its material. moduli of the same color have the same material, therefore they belong to the same layer. We represent interlayers by a white edge while the other contour egades are black. Gaps inside a block are also represented in white and are automatically detected as gaps meaning that erosion impacted this region for sure. line could be added to give hint on the rosion.
+
+Then we have to extract the structure out of this drawing. Meaning that we have to identify the different blocks, moduli, faults and materials from the drawing. To do so we proceed this way: the vpaint output format is an xml file which describe our drawing in terms
+of faces, edges and vertices. Each faces has a cycling orientation which is clockwise or counterclockwise but for building and manipulating our structure more easelly we choose that all of our layer will be first read clockwiselly and from the most recent (the higher in general) to the oldest. In fact it is an easy task to wirte the layers in the correct way but we need to find out which layers belong to the same block. To solve this issue we will use the interlayers and then the white edges. Two layers belong to the same block if they share a commun white edge. Thanks to this method we build our blocks. we can notice that the youngest and the oldest layer have just one interlayer that make them part of a block. However we will describe our layer with four part of the contours the upper interlayer, the righedges, the bottom interlayer and the left edges. Consequently for these two specific layer we will compute automatically the lacking interlayer (limitation it is not always good).
+	
+
+IV) Story Telling
+
+
+V) Simulation
+
+
 
 VI) Results
 
 VII) Conclusion
+
+Hermit curves equations :\\
+Given two points $P_0, P_1$ and two tangents $T_0, T_1$ being the tangent we can find at the matching number points, the hermit interpolation which will produce a $C_1$ curve has for equation : 
+
+
+\begin{equation}
+h(t) = (2*t^3 - 3*t^2 + 1)*P_0 + (t^3 - 2*t^2 + t)*T_0 + (t^3 -t^2)*T_1 +(3*t^2 - 2*t^3)*P_0
+\end{equation}
+
+It is possible to multiply the tangent by a bias factor which will make the curvature of the curve varying more when this factor becomes big.
 
 glossary
 	
