@@ -350,6 +350,7 @@ Erode: three types of erosion
 			
 			precondition : the modulus must have a edge at the surface without being the youngest modulus of its block
 			postcondition: the modulus has been corrected with matter being added.
+			
 			How it is done: Here we will proceed the exact same way than the previous case except that we won't search for concavities at the upper interlayer but we will try to correct the curve whenever the curve is at the surface, meaning that it joins to corners of younger moduli which are of the same material composition. We will use the corners as starting and ending point of the curve and we will consider the tangent at those point the same way as we computed them previously. Here we don't search for concavities and try to correct the curve in any cases because we can assume than it the concerned modulus was eroded because the erosion divided the modulus jus above it at least in two parts.
 		- unErode sides of moduli:
 		
@@ -357,12 +358,13 @@ Erode: three types of erosion
 			
 			precondition: no preconditions
 			postconditions: the side that has been unEroded must not collide with other moduli
-			How it is done:
-			
+			How it is done: Here we will also search for concavities but not at the same place and not the same way than before. First we only look at the left and right side of the modulus here. In fact on these sides there are some concavties that are not due to erosion but just on the way the sediment have deposited and the way the terrain has been fold. Consequently we are only interested at the concavities that only start at the upper corners of the modulus. Then we don't have to compute the derivatives of the curve and we will correct the concavity differently than before. In order to detect the convaties we will consider all the strings between the upper corner (left or right) and the points of the respecting side and see if it intersects the modulus or not. Then we consider the non intersecting string between the upper corner and the side point which is the farthest of the corner in terms of index (if we consider the size having points starting at index $0$ and finishing at index $side_size - 1$). Starting from this side point we will compute the normal at his point and create a new mass following the line beginning at the side point and directed by the normal. The new mass will be created at the point of same high than the upper corner in the line. This point will be the new corner of the modulus and expand it because the side will be moved toward the computed normal line.
 		- unErode two moduli of the same material in the same block.
 		
-		precondition: 
-		pstconditions
+		precondition: the moduli must be of the same material and in the same block. In addition they must be facing each other without any modulus between them. 
+		postconditions: the gap between the two moduli must have been filled and the mass-spring system msut have been regenerated.
+		How it is done: We proceed the same way than the unErode modulus which is in gap case but this time we will not deform an existing curve but we will create a interlayer up between the two concerned moduli using the hermit curve the same way. The starting and ending points will be the corners while the tangent will be the derivatives according to ths neigbouring point.
+		
 
 Sediment:
 
@@ -370,11 +372,15 @@ Sediment:
 	we all the material younger that this one should ahve been unSedimented already. If it is just one molulus we should also check if inside its block there are  no modulus with a material younger than the material of the modulus we want to unSediment.
 	
 	the postconditions are: the un sedimentation has a duration htat should comes to an end to finish and at the end of the time the concerned moduli should have been erased from the XS. also the massSpring mesh should be reGenerated at the end of the event in order to uniformise the new state of the XS.
+	
+	How it is done: Here we just reduce gradually the equilibrum length of vertical springs until it reaches zero when we delete the modulus completly. No torsion force will be applied during this animation because we don't want the modulus to undergo deformations.
 
 Fold:
 	The preconditions are: there are no precondition for this event. the user is free to play with this event as it allows geologists to test their hypothesis on forces that have been applied to the XS in the past and with a duration.
 	
 	The posconditions are: the event no longer apply forces on the concerned particles
+	
+	How it is done: It is quite simple to apply. We add external forces either to a block, a modulus or a specific mass during the requested time. The external forces are taken into account in the main physical loop.
 	
 
 \section{Ordonnancing Events}
