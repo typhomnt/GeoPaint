@@ -152,15 +152,11 @@ Here is an example of the chartreuse restoration using that king of geometrical 
 
 \section{Physical solutions}
 
-In order to solve the cross-section restoration problem an other kind of solution tools has been explored which is physically based tools. While geometrical tool don't assure the physical consistancy of the restoration which can question the restoration itself, physical based tools are by nature physically consistent.  We can identify two kind of physically based tools: those which help validating 	complex structural model of 3D subsurface like LithoTect(ref) and those which run a simulation over such models using finite element method with the Coulomb theory like SLAMTec and OptumG2.
-Software like LithoTect are very usefull because they allow geologist to build very consistent and complex model of a subsurface which implies that they can create very fine 2D cross section where they can run a physical simulation with SLAMTec or OptumG2. Such tools can be used to validate a restoration. Indeed by running a simulation over the restoration geologist can see if what they produce seems coherent with the current state of the cross section even if those simulations can never produce the same result as this current state. This is one drawback of using those tool of foward simulation, even if we have a very fine representation of our model it can never achieve to retrieve a very similar correspondances and cannot validate by itself a restoration, geologists have to discuss the solution proposed. However some physically based tool try to  solve this problem by proposing a backward simulation. This simulation is not simulating the "real" inverse of what happened to the current cross section but they run a finite element simulation with opposite forces and condition to what the geologist think that happened. For instance if the current section has been subject to compression forces the tool will apply extension forces to the model, same thing with compaction and other phenomena. While this method is likelly to produce much better results in terms of similarity with the restoration and the current state of the section, it is more difficult to use because there exist many uncertainties on identifying the events that occured between the current cross section and the restoration as there are several possible scenarios.
+In order to solve the cross-section restoration problem an other kind of solution tools has been explored which is physically based tools. While geometrical tool don't assure the physical consistancy of the restoration which can question the restoration itself, physical based tools are by nature physically consistent.  We can identify two kind of physically based tools: those which help validating 	complex structural model of 3D subsurface like LithoTect(ref) and those which run a simulation over simpler but physically coherent enough using finite element method with the Coulomb theory like SLAMTec and OptumG2.
+Software like LithoTect are very usefull because they allow geologist to build very consistent and complex model of a subsurface which implies that they can create very fine 2D cross section where they can run a physical simulation on.
+Software like SLAMTec or OptumG2 run simulations over simpler models which are also physically consistent but the simulation will take less parameters and properties of the terrain, leading to faster computation time .Such tools can be used to validate a restoration. Indeed by running a simulation over the restoration geologist can see if what they produce seems coherent with the current state of the cross section even if those simulations can never produce the same result as this current state. This is one drawback of using those tool of foward simulation, even if we have a very fine representation of our model it can never achieve to retrieve a very similar correspondances and cannot validate by itself a restoration, geologists have to discuss the solution proposed. However some physically based tool try to  solve this problem by proposing a backward simulation. This simulation is not simulating the "real" inverse of what happened to the current cross section but they run a finite element simulation with opposite forces and condition to what the geologist think that happened. For instance if the current section has been subject to compression forces the tool will apply extension forces to the model, same thing with compaction and other phenomena. While this method is likelly to produce much better results in terms of similarity with the restoration and the current state of the section, it is more difficult to use because there exist many uncertainties on identifying the events that occured between the current cross section and the restoration as there are several possible scenarios.
 
-Like mentioned above, several continuous animation tools for subsurface evolution over time are already available. They work on the assumption that sedimentary layers were in a horizontal configuration at the starting position which is a well used hypothesis in geology. \\\\
-
-The goal of this kind of forward simulation is to validate a restoration that had been generated from a present dating 2D section and see if the result matches with it. This kind of simulation is configurable by several parameters such as the erosion and the friction coefficients.\\\\
-
-Geological cross-section restoration can be obtained thanks to geometrical tools (refs ?). Those tools deal with each block (soil section between two faults) one by one and flatten each layer while conserving their respective area or length. After the flattening operation the user can manually stick the new block to its neighbours with the corresponding layers facing each other. Here is an example of restoration taken from Chartreuse slice:
-\\
+Even though those physically based tool respect physic laws and produce very consistent results, they are not fully matching the cross section current state and thus cannot validate the hypothetical section history they have simulated. In addition this kind of tool doesn't explore several scenarios and are restrained to a single or very few cases.
 \section{Our Solution}
 
 Unlike forward animation techniques which use a restoration and run a mechanical simulation over it, we will run an inverse modeling animation on the current 2D section and compare it visually to the provided restoration. In order to explore a reasonable number of geological scenarios we will encode them into an interactive story tree.\\\\
@@ -417,17 +413,6 @@ Then we have to extract the structure out of this drawing. Meaning that we have 
 of faces, edges and vertices. Each faces has a cycling orientation which is clockwise or counterclockwise but for building and manipulating our structure more easelly we choose that all of our layer will be first read clockwiselly and from the most recent (the higher in general) to the oldest. In fact it is an easy task to wirte the layers in the correct way but we need to find out which layers belong to the same block. To solve this issue we will use the interlayers and then the white edges. Two layers belong to the same block if they share a commun white edge. Thanks to this method we build our blocks. we can notice that the youngest and the oldest layer have just one interlayer that make them part of a block. However we will describe our layer with four part of the contours the upper interlayer, the righedges, the bottom interlayer and the left edges. Consequently for these two specific layer we will compute automatically the lacking interlayer (limitation it is not always good).
 	
 
-IV) Story Telling
-
-
-V) Simulation
-
-
-
-VI) Results
-
-VII) Conclusion
-
 Hermit curves equations :\\
 Given two points $P_0, P_1$ and two tangents $T_0, T_1$ being the tangent we can find at the matching number points, the hermit interpolation which will produce a $C_1$ curve has for equation : 
 
@@ -440,7 +425,48 @@ It is possible to multiply the tangent by a bias factor which will make the curv
 
 Collisions methods: \\
 
-Collisions between blocks.
+Collisions between blocks. Each layer is delimited by its boundaries which we devide into four parts: upper interlayer, bottom interlayer, right side and left side. Each of these part are composed of segments and the union of all of them is a closed polygon. We deal with block collision by computing particle (circle) segments collision. Moreover for each particle of one block we consider the segement built by the particle position at time $t - dt$ and its position at time $t$ and we check if this segment crosses one of the other blocks segment border. In addition, with this we can also check for collision inside the block it self which is usefull to give reallistic results for un sedimentation for instance. This technique as the advantage of determinig precisely the segment with which the particle collided even if the particle went through the colliding block. However there is still a chance to fail at identifying a collision depending on the order we treat each block animation and collision detection.\\
+In order to check intersection between segments we proceed the following way:\\
+Given two sgements $[PQ]$ and $[RS]$ we will consider a parametrisation of their equations: 
+
+\begin{align}
+	PQ &= P + t*\overrightarrow{PQ} \forall t \in [0,1]\\
+	RS &= R + u*\overrightarrow{RS} \forall u \in [0,1]\\
+\end{align}
+
+With this parametrisation the two segments intersect if and only if:\\
+\begin{equation}
+\exists t,u \in [0,1], P + t*\overrightarrow{PQ} = R + u*\overrightarrow{RS}
+\end{equation}
+
+
+We need to extract two equations from this one in order to find $u$ and $t$.
+To do so we will use the cross product to keep only one variable in each equation. Thus by applying a cross product with $\overrightarrow{PQ}$ and $\overrightarrow{RS}$ we obtain the following equations:
+
+
+\begin{align}
+	t &= \frac{\overrightarrow{(R - P)} \wedge \overrightarrow{RS}}{\overrightarrow{PQ} \wedge \overrightarrow{RS}}\\
+	u &= \frac{\overrightarrow{(P - R)} \wedge \overrightarrow{PQ}}{\overrightarrow{RS} \wedge \overrightarrow{PQ}}
+\end{align}
+
+We must note that the simplification was made by noticing that $\overrightarrow{PQ} \wedge \overrightarrow{PQ} = 0$ and $\overrightarrow{RS} \wedge \overrightarrow{RS} = 0$.
+
+Then we can distinguish $4$ cases :
+1) $ \overrightarrow{RS} \wedge \overrightarrow{PQ} = 0$ and $\overrightarrow{(P - R)} \wedge \overrightarrow{PQ} = 0$
+
+This means that our segments are parrallel because of the first condition and colinear because of the second. We deduce that our segement are intersecting 
+iff :
+
+if ($\overrightarrow{PR}.\overrightarrow{PS} < 0$) or ($\overrightarrow{PR}.\overrightarrow{PS} >= 0$ and $\overrightarrow{PQ}.\overrightarrow{PS} >= 0$ and ($||\overrightarrow{PS}|| < ||\overrightarrow{PQ}||$ or $||\overrightarrow{PR}|| < ||\overrightarrow{PQ}||$))
+
+2)  $ \overrightarrow{RS} \wedge \overrightarrow{PQ} = 0$ and $\overrightarrow{(P - R)} \wedge \overrightarrow{PQ} != 0$
+In that case the sgements are parallel but non intersecting.
+
+3)  $ \overrightarrow{RS} \wedge \overrightarrow{PQ} != 0$.
+The segment are intersecting iff the computation of $t$ and $u$ gives $t,u \in [0,1]$
+
+4) Otherwise the segements are not parallel and non intersecting
+
 
 glossary
 	
