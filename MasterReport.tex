@@ -156,10 +156,34 @@ In order to solve the cross-section restoration problem an other kind of solutio
 Software like LithoTect are very usefull because they allow geologist to build very consistent and complex model of a subsurface which implies that they can create very fine 2D cross section where they can run a physical simulation on.
 Software like SLAMTec or OptumG2 run simulations over simpler models which are also physically consistent but the simulation will take less parameters and properties of the terrain, leading to faster computation time .Such tools can be used to validate a restoration. Indeed by running a simulation over the restoration geologist can see if what they produce seems coherent with the current state of the cross section even if those simulations can never produce the same result as this current state. This is one drawback of using those tool of foward simulation, even if we have a very fine representation of our model it can never achieve to retrieve a very similar correspondances and cannot validate by itself a restoration, geologists have to discuss the solution proposed. However some physically based tool try to  solve this problem by proposing a backward simulation. This simulation is not simulating the "real" inverse of what happened to the current cross section but they run a finite element simulation with opposite forces and condition to what the geologist think that happened. For instance if the current section has been subject to compression forces the tool will apply extension forces to the model, same thing with compaction and other phenomena. While this method is likelly to produce much better results in terms of similarity with the restoration and the current state of the section, it is more difficult to use because there exist many uncertainties on identifying the events that occured between the current cross section and the restoration as there are several possible scenarios.
 
-Even though those physically based tool respect physic laws and produce very consistent results, they are not fully matching the cross section current state and thus cannot validate the hypothetical section history they have simulated. In addition this kind of tool doesn't explore several scenarios and are restrained to a single or very few cases.
+Even though those physically based tool respect physic laws and produce very consistent results, they are not fully matching the cross section current state and thus cannot validate the hypothetical section history they have simulated. In addition this kind of tool doesn't explore several scenarios and are restrained to a single or very few cases. 
+That's why one of the main purpose of this master thesis is to explore and propose several plausible scenarios.
+
 \section{Our Solution}
 
-Unlike forward animation techniques which use a restoration and run a mechanical simulation over it, we will run an inverse modeling animation on the current 2D section and compare it visually to the provided restoration. In order to explore a reasonable number of geological scenarios we will encode them into an interactive story tree.\\\\
+We presented two kinds of tools used for solving the problem of producing the animation between the recovered restoration and the current cross section. Moreover we can note that regardless the type of tool some of them produce forward animation and others backward ones. 
+Here we will opt for a backward simulation using a hybrid tool between geometrical physical.
+Thus we will run an inverse modeling animation on the current 2D section and compare it visually to the provided restoration.\\\\
+
+In this master thesis the main objective is to create a generic tool which builds different scenarios from a given drawing. The tool must give the user choice to make and allow him to come back on them. That's why similarly to Lidal (ref) we will use story trees to encode our scenarios.
+
+In order to produce such at tool we had to answer the following questions:
+- What will be our input data (which format)
+- How to precilly encode our scenarios and deal with them
+- Which method to use for animating
+- How to validate the solution proposed
+
+Because the topology of the section is changing over time we opted for using VAC and VGC structures which we allow us to keep a time-space topological consistency during the animation.
+
+
+For the story telling 
+
+For the animation
+
+The general workflow is
+
+
+ In order to explore a reasonable number of geological scenarios we will encode them into an interactive story tree.\\\\
 
 We first provide one possible scenario to the user making the story tree taking the form of a line. Starting from that point the user can decide to create another branch from any node and explore a new scenario. Each node of the tree will corresponds to a discrete topological event such as faults which can be dealt using a similar approach to (3). This means that between two consecutive node levels we will simulate the consequence of this event. Thus the tree banches will correspond to the continuous animation of the soil change caused by the end node event of the branch.\\\\
 
@@ -321,6 +345,7 @@ The event graph shows time dependencies between geological events. An event is r
 Only 4 out of the 5 event have been treated, the compaction will be reserved for later.
 Describe the 4 events:
 
+Evaluation functions
 
 Faults: subdivided into modulus event
 	Our XS contains what is called fault which corresponds to the breaking of a block into two parts and only two parts. Geologically speaking when a fault begin to open, it splits the block starting by the oldest moduli that is to say from bottom to up. 
