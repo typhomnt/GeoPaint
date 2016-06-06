@@ -165,23 +165,38 @@ We presented two kinds of tools used for solving the problem of producing the an
 Here we will opt for a backward simulation using a hybrid tool between geometrical physical.
 Thus we will run an inverse modeling animation on the current 2D section and compare it visually to the provided restoration.\\\\
 
-In this master thesis the main objective is to create a generic tool which builds different scenarios from a given drawing. The tool must give the user choice to make and allow him to come back on them. That's why similarly to Lidal (ref) we will use story trees to encode our scenarios.
+In this master thesis the main objective is to create a generic tool which builds different scenarios from a given drawing. The tool must give the user choices to make and allow him to come back on them. That's why similarly to Lidal (ref) we will use story trees to encode our scenarios.
 
 In order to produce such at tool we had to answer the following questions:
 - What will be our input data (which format)
-- How to precilly encode our scenarios and deal with them
+- How to precisely encode our scenarios and deal with them
 - Which method to use for animating
 - How to validate the solution proposed
 
-Because the topology of the section is changing over time we opted for using VAC and VGC structures which we allow us to keep a time-space topological consistency during the animation.
-
+Because the topology of the section is changing over time we opted for using VAC and VGC structures which we allow us to keep a time-space topological consistency during the animation.  Thus all the input cross section will be drawn using the vpaint software (ref) which build a XML file as output. We will parse this XML file as the input of our tool.
+%introduce vocabulary and global methods with schemes
 
 For the story telling 
+Regarding the story telling part we propose a method similar to Lidal (ref) using to graphs: a Event Graph and a Story Graph.
+The Event graph will give time depency between events while the Story graph  represents the tree of explored scenarios.
 
-For the animation
+For the animation we will use a first approximation of terrain displacement. We will consider sedimentary layers to be plastic materials. Thus as a first approximation we will map mass spring systems to our drawing in order to animate it.
 
-The general workflow is
+The general workflow is: first analysing the input vpaint drawing in order to extract all the geological structure we need to run our simulation on and propose plausible scenarios. 
+Right after analysing the drawing we can generate the event graph of the cross section which will give the time dependency of the already detected events.
+Then we map mass spring system on the cross section and propose the first events to simulate to the user.
+Then the user will choose progressively which events he wants to simulate and will build the tree of scenarios which is the Story graph. 
 
+It is possible that by choosing one path in the tree, the user meets a dead end without getting to the restoration state. This means that chosen sequence was not plausible at some point.
+
+We can can evalute the success rate during the simulation by computing the global deformation of the drawing as wee know that in the end every layers must be plane.
+
+Finally during the simulation we will save the animation as VAC in an output XML file in order to have a fluid animation.
+
+
+When drawing cross sections, geologists use precise vocabularey to describe the different features of the section.
+Moreover they divide the part of the drawing with the following structures: 
+A cross section is composed of blocks which are chunks of sediments located between two faults or one fault and a drawing's border. Each block contains geological units of sementary layers where one unit is in fact represented by a face topologicaly. Each layer is caracterised by a geological time interval during which the sediment has deposited, it correspond to the face color in the cross section. Fault correspond to breaks in the terrain which are due to extreme folding condition and create topoligical discontinuities in the section.
 
  In order to explore a reasonable number of geological scenarios we will encode them into an interactive story tree.\\\\
 
@@ -197,6 +212,16 @@ As geological structures can have a rather complex topology, the 2D section will
 
 The inverse modeling animation will be done on top of the vector animation complex structure (5) which is used to describe all possible changes in the topology of a vector graphic complex over time. This method will require prior information about several geological parameters that will affect the animation such as materials’ density, friction coefficients and others like erosion and sedimentation speeds.\\\\\
 
+\section{Cross section data structure and Drawing analysis}
+
+As mentionned above our input drawing will be built using vpaint software which implements the VAC and VGC structures (refs).
+More preciselly we will use a VGC as input which is composed of vertices, edges and faces. An interesting feature of these structures is that each instance has a unique identifier and color which will allow us to build our geological structure.
+We will use the precendently described geological structure as our intern cross section data structure. In other words a drawing will be represented as a cross section or slice in our terms which will be composed of blocks themselves composed of units. Because we consider that at the restoration state all units are straight rectangle we decompose our units into two sides (left and right) two level bound (upper and bottom) which either make the links between unit or constitute the limits of the drawing. Thus we must deduce those structure from the input vpaint file. 
+To do so we use the colors of our edges and faces. When importing the drawing we first ask to the user to give the different time period for each material exisiting in the cross section. Then we will build our blocks by adding succefully all the unit of each layer starting the youngest ones to the oldest. We do this sort in order to simplify the block creation and minimize the number of block created during this phase. Moreover when adding a new unit we try to find one already added unit which share either one portion of its upper bound  or its bottom bound with it. If we can't find one matching unit we place it in a new block. If we find one or several sharing units we deduce that they are all part of the same block so we store them in one unique block. If we do the sort like previously enonced we will thus reduce the number of block created because the only cases where we create blocks are either when the newly added unit is a surface unit or is unit located in a different block than the previously added ones.
+
+When we have all our blocks created in our internal stucture we can identify the fault by looking at the color of the edges. If it is different than black or wite then it correspond to a fault which are caractarised by they color. The units are caracterized by their face color and their upper and bottom bounds which are drawn in white for most of them. Cross section border are usually drawn in black but we can deduce automatically which edge belongs to the lacking bound.
+
+We then have all the different material age, the blocks and units objects and the different fault we can find in the drawing. We will store all these information into a configuaration file .geo which will allow the user to save time by not giving the material information each times he opens the file.
 \section{Continuous Simulation}
 
 \section{General Overview}
