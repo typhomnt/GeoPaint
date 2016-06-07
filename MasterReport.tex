@@ -152,7 +152,7 @@ Here is an example of the chartreuse restoration using that king of geometrical 
 
 \section{Physical solutions}
 
-In order to solve the cross-section restoration problem an other kind of solution tools has been explored which is physically based tools. While geometrical tool don't assure the physical consistancy of the restoration which can question the restoration itself, physical based tools are by nature physically consistent.  We can identify two kind of physically based tools: those which help validating 	complex structural model of 3D subsurface like LithoTect(ref) and those which run a simulation over simpler but physically coherent enough using finite element method with the Coulomb theory like SLAMTec and OptumG2.
+In order to solve the cross-section restoration problem an other kind of solution tools has been explored which is physically based tools. While geometrical tool don't assure the physical consistancy of the restoration which can question the restoration itself, physical based tools are by nature physically consistent.  We can identify two kind of physically based tools: those which help validating complex structural model of 3D subsurface like LithoTect(ref) and those which run a simulation over simpler but physically coherent enough using finite element method with the Coulomb theory like SLAMTec and OptumG2.
 Software like LithoTect are very usefull because they allow geologist to build very consistent and complex model of a subsurface which implies that they can create very fine 2D cross section where they can run a physical simulation on.
 Software like SLAMTec or OptumG2 run simulations over simpler models which are also physically consistent but the simulation will take less parameters and properties of the terrain, leading to faster computation time .Such tools can be used to validate a restoration. Indeed by running a simulation over the restoration geologist can see if what they produce seems coherent with the current state of the cross section even if those simulations can never produce the same result as this current state. This is one drawback of using those tool of foward simulation, even if we have a very fine representation of our model it can never achieve to retrieve a very similar correspondances and cannot validate by itself a restoration, geologists have to discuss the solution proposed. However some physically based tool try to  solve this problem by proposing a backward simulation. This simulation is not simulating the "real" inverse of what happened to the current cross section but they run a finite element simulation with opposite forces and condition to what the geologist think that happened. For instance if the current section has been subject to compression forces the tool will apply extension forces to the model, same thing with compaction and other phenomena. While this method is likelly to produce much better results in terms of similarity with the restoration and the current state of the section, it is more difficult to use because there exist many uncertainties on identifying the events that occured between the current cross section and the restoration as there are several possible scenarios.
 
@@ -532,8 +532,24 @@ Material.
 
 Young Modulus.
 
-Event: unFolding, unErode, unSediment, un
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{dynel2D.png}
+	\caption{Dynel 2D restoration sequence}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{slamtec.png}
+	\caption{Slamtec cross section modeling}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=3]{mve2D.png}
+	\caption{MVE 2D restoration sequence}
+\end{figure}
 
 \bibliography{pfe.bib}
 
