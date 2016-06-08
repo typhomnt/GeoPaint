@@ -218,7 +218,7 @@ In this master thesis the main objective is to create a generic and interactive 
 
 More generally the tool we want to create is bind by the structure of the input data, the enconding of our story and scenarios, the way of animating the drawing and the validation method. Because we also want our tool to be interactive, we need to propose an animation model which is fast enough to make its computations in a near real time way. Basically, the general workflow we will follow is: 1) Import the input drawing 2) Choose a scenario to play 3) Simulate it 4) Evaluate its plausibility 5) Loop on the scenario step while the user wants to explore different stories\\\\
 
-In our geological case we encounter lots of different topological configuration in the cross-sections. Indeed as we mentionned before our cross-section is composed of sedimentary layers, fault and blocks which are chunks of the section located between faults. Consequently each block contains part of superimposed layer which are called geological units (units for short) and their side show discontinuities with its neighbouring block. Each layer is colored with a unique color representing the period it has deposited. Topologicaly speaking our cross-section is a convex graph composed of faces representing the units, which means that every face as at least one neighbour and there are no isolated group of faces.\\\\
+In our geological case we encounter lots of different topological configuration in the cross-sections. Indeed as we mentionned before our cross-section is composed of sedimentary layers, fault and blocks which are chunks of the section located between faults. Consequently each block contains part of superimposed layer which are called geological units (units for short) and their side show discontinuities with its neighbouring block. Each layer is colored with a unique color representing the period it has deposited. Topologicaly speaking our cross-section is a convex graph composed of faces representing the units, which means that every face as at least one neighbour and there are no isolated group of faces. The discontinuities we find in the cross section are due to faults creation caused by extreme folding conditions.\\\\
 
 Because of the cross section has a well defined topological representation and because it is changing over time we opted for using VAC and VGC structures which we allow us to keep a time-space topological consistency during the animation. The VGC data structure has the advantage of modeling all possible incidence relations between vertices, edges and faces in 2D sketches, therefore it is a good choice for us who want to produce a tool which can be applied to other situations outside the geological field. The VAC structure is used to animate the VGC and describe all possible changes in the topology of a VGC over time which is be a good solution to show our produced animation. As the VAC works with keyframing and inbetweening the keyframes we need to propose an inbetweening methods for our input model which will be part of our animation method.\\\\
   Because we use VGC and VAC structures all the input cross section will be drawn using the vpaint software (ref) which build a XML file as output. Then we will parse this XML file as the input of our tool.\\\\
@@ -235,76 +235,40 @@ The validation can be done visually by the user but we also give him hints about
 
 Futhermore it is possible that by choosing one path in the tree, the user meets a dead end without getting to the restoration state. This means that chosen sequence was not plausible at some point and the user must go back to its choices.\\\\
 
-To summerize our general workflow is: first analysing the input vpaint drawing in order to extract all the geological structure we need to run our simulation on and propose plausible scenarios. Then map mass spring system on the cross section and propose the first events to undo at the root of the story tree. 
+To summerize our general workflow is: first analysing the input vpaint drawing in order to extract all the geological structure we need to run our simulation on and propose plausible scenarios. Because we will need prior geological information for the simulation and to propose plausible events to the user, we ask the user to give some geological features of the cross section such as the layers' age, their deformation coefficient (Young Modulus ref), their friction coefficient and so on.\\ 
+After this step, we map mass spring system on the cross section and propose the first events to undo at the root of the story tree. 
 Then the user will choose progressively which events he wants to simulate and will build the tree of scenarios i.e. the story tree. At each step the user can go back to a previous node and decide to simulate other events that the ones he selected.
 Finally during the simulation we will save the animation as VAC in an output XML file in order to have a fluid animation.\\\\
-
-
-When drawing cross sections, geologists use precise vocabularey to describe the different features of the section.
-Moreover they divide the part of the drawing with the following structures: 
-A cross section is composed of blocks which are chunks of sediments located between two faults or one fault and a drawing's border. Each block contains geological units of sementary layers where one unit is in fact represented by a face topologicaly. Each layer is caracterised by a geological time interval during which the sediment has deposited, it correspond to the face color in the cross section. Fault correspond to breaks in the terrain which are due to extreme folding condition and create topoligical discontinuities in the section.
-
-
-In order to explore a reasonable number of geological scenarios we will encode them into an interactive story tree.\\\\
-
-
-Before generating the tree we will extract all the information we can from the 2D section, that is to say the number of layers, their age, the already determined eroded zones and so on.\\\\
-
-This method will require prior information about several geological parameters that will affect the animation such as materials’ density, friction coefficients and others like erosion and sedimentation speeds.\\\\\
 
 \section{Cross section data structure and Drawing analysis}
 
 As mentionned above our input drawing will be built using vpaint software which implements the VAC and VGC structures (refs).
-More preciselly we will use a VGC as input which is composed of vertices, edges and faces. An interesting feature of these structures is that each instance has a unique identifier and color which will allow us to build our geological structure.
-We will use the precendently described geological structure as our intern cross section data structure. In other words a drawing will be represented as a cross section or slice in our terms which will be composed of blocks themselves composed of units. Because we consider that at the restoration state all units are straight rectangle we decompose our units into two sides (left and right) two level bound (upper and bottom) which either make the links between unit or constitute the limits of the drawing. Thus we must deduce those structure from the input vpaint file. 
-To do so we use the colors of our edges and faces. When importing the drawing we first ask to the user to give the different time period for each material exisiting in the cross section. Then we will build our blocks by adding succefully all the unit of each layer starting the youngest ones to the oldest. We do this sort in order to simplify the block creation and minimize the number of block created during this phase. Moreover when adding a new unit we try to find one already added unit which share either one portion of its upper bound  or its bottom bound with it. If we can't find one matching unit we place it in a new block. If we find one or several sharing units we deduce that they are all part of the same block so we store them in one unique block. If we do the sort like previously enonced we will thus reduce the number of block created because the only cases where we create blocks are either when the newly added unit is a surface unit or is unit located in a different block than the previously added ones.
+More preciselly we will use a VGC as input which is composed of vertices, edges and faces. This choice is justified by the fact that VGC can model all possible incidence relations between faces in 2D sketches and our cross-section is composed only of adjacent faces. An interesting feature of these structures is that each instance has a unique identifier and color which will allow us to build our geological structure.\\\\
+We will use the precendently described geological structure as our intern cross section data structure. In other words a drawing will be represented as a cross section which will be composed of blocks themselves composed of units. Because we consider that at the restoration state all units are straight rectangles, we decompose our units into two sides (left and right) znd two level boundaries (upper and bottom) which either make the links between unit or constitute the limits of the drawing. 
+%drawing
+Thus we must deduce those structure from the input vpaint file. \\\\\
+To do so we use the colors of our edges and faces. When importing the drawing we first ask to the user to give the different time period for each material exisiting in the cross section. Then we will build our blocks by adding succefully all the unit of each layer starting the youngest ones to the oldest. We do this sort in order to simplify the block creation and minimize the number of block created during this phase. Moreover when adding a new unit we try to find one already added unit which share either one portion of its upper bound  or its bottom bound with it. If we can't find one matching unit we place it in a new block. If we find one or several sharing units we deduce that they are all part of the same block so we store them in one unique block. If we do the sort like previously enonced we will thus reduce the number of block created because the only cases where we create blocks are either when the newly added unit is a surface unit or is unit located in a different block than the previously added ones.\\\\
 
-When we have all our blocks created in our internal stucture we can identify the fault by looking at the color of the edges. If it is different than black or wite then it correspond to a fault which are caractarised by they color. The units are caracterized by their face color and their upper and bottom bounds which are drawn in white for most of them. Cross section border are usually drawn in black but we can deduce automatically which edge belongs to the lacking bound.
+When we have all our blocks created in our internal stucture we can identify the fault by looking at the color of the edges. If it is different than black or wite then it correspond to a fault which are caractarised by they color. The units are caracterized by their face color and their upper and bottom bounds which are drawn in white for most of them. Cross section border are usually drawn in black but we can deduce automatically which edge belongs to the lacking bound (limitation it is not always good).\\\\
 
-We then have all the different material age, the blocks and units objects and the different fault we can find in the drawing. We will store all these information into a configuaration file .geo which will allow the user to save time by not giving the material information each times he opens the file.
+We then have all the different material age, the blocks and units objects and the different fault we can find in the drawing. We will store all these information into a configuaration file .geo which will allow the user to save time by not giving the material information each times he opens the file. We have to note that in the input XML file, faces have an arbitrary cycling orientation which can be clockwise or counterclockwise. That's why but for building and manipulating our structure more easelly we will choose the convention that all our units will be first read clockwiselly. Thus we reverse the faces which are written counterclockwisely
 
 III) Geological Structure Representation and Analysis
-	How do we represent a Cross Section.
-	A Cross-Section contains several parts : 
-		-It contains parts of geological layers => floors or moduli
-		- A geological layer is a layer composed of the same kind of material.
 		In our case we deal with sementary layers. It implies that each material is caracterized by its temporal existance.	
 	   	- Faults which can be seen as discontinuities in the XS
 		- Blocks which represent the groups of floors delimited by faults.
 		- Each Material is caracterised by a Young Modulus which describe its plasticy and elesticity,
 		an age period and a friction coefficient.
 
-Drawing analysis. As Mentionned before our input is a colored vpaint drawing which is composed of face, edges and vetices stored in 
-a vertex complex graphics strucutre (ref). Passage du sujet.
-In the drawing we color faces which represent the different moduli of the XS with the color being its material. moduli of the same color have the same material, therefore they belong to the same layer. We represent interlayers by a white edge while the other contour egades are black. Gaps inside a block are also represented in white and are automatically detected as gaps meaning that erosion impacted this region for sure. line could be added to give hint on the rosion.
-
 Then we have to extract the structure out of this drawing. Meaning that we have to identify the different blocks, moduli, faults and materials from the drawing. To do so we proceed this way: the vpaint output format is an xml file which describe our drawing in terms
-of faces, edges and vertices. Each faces has a cycling orientation which is clockwise or counterclockwise but for building and manipulating our structure more easelly we choose that all of our layer will be first read clockwiselly and from the most recent (the higher in general) to the oldest. In fact it is an easy task to wirte the layers in the correct way but we need to find out which layers belong to the same block. To solve this issue we will use the interlayers and then the white edges. Two layers belong to the same block if they share a commun white edge. Thanks to this method we build our blocks. we can notice that the youngest and the oldest layer have just one interlayer that make them part of a block. However we will describe our layer with four part of the contours the upper interlayer, the righedges, the bottom interlayer and the left edges. Consequently for these two specific layer we will compute automatically the lacking interlayer (limitation it is not always good).
+of faces, edges and vertices. Each faces has a cycling orientation which is clockwise or counterclockwise and from the most recent (the higher in general) to the oldest. In fact it is an easy task to wirte the layers in the correct way but we need to find out which layers belong to the same block. To solve this issue we will use the interlayers and then the white edges. Two layers belong to the same block if they share a commun white edge. Thanks to this method we build our blocks. we can notice that the youngest and the oldest layer have just one interlayer that make them part of a block. However we will describe our layer with four part of the contours the upper interlayer, the righedges, the bottom interlayer and the left edges. Consequently for these two specific layer we will compute automatically the lacking interlayer (limitation it is not always good).
 \section{Continuous Simulation}
 
 \section{General Overview}
 
 Here we will present our first method to tackle the problem of proposing a panel of plausible animations giving geological restoration as final state from a 2D input slice. 
-The main idea of our methods is to map a mass spring system on each block (section between two or several faults) of the slice and simulate a extension by freezing the physics of several blocks at each time step and let the others move as they should given geological events. The output of our method we will a series of inbetween VGC which will be played on VPaint.\\\\
-The first step of our method is to draw the 2D slice using VPaint which allow the user to do it pretty quickly.
-This drawing will highlight all the different blocks which are contained in the slice.
-In addition the VPaint drawing will show all the different layers of each block and faults. Additionnal information such as erosion lines can be added. \\\\
-After drawing our section in VPaint we will read the .vec file in our GeoPaint editor in order to add all the necessary information about our section such as the layers' materials containing crutial information (density, age, etc...) or even  additionnal information about faults and erosion lines. This information will allow us to run the animation over our section.
-Indeed once the geo editing is finished we will gather all the information into one format (.geo) and will use it to describe our slice and animate it.\\\\
-The first step for animating is mapping a mass-spring system into each block. Then we have to solve the restoration problem at a geological point of view, that is to say build the first story tree and find a method to propose which event can happen at each node.\\\\
-As the first proposed story tree is computed fully automaticaly it may not show the most plausible result that's why we propose the user to choose events a list of plausible geological events at each node.
-This way the user can construct all the plausible stories he wants.
-
-\section{General structure}
-
-One important matter in our model is to choose carefully the representation of our slices as it will affect how we will animate it.
-We choose one possible representation of a geological slice but we are aware that some part of this structure can be modified through the project progression.\\\\
-Similary to the drawing a slice is composed of blocks, faults and erosion lines. It also contains a list of all the materials composing the different layers.This list will be usefull when we want to see if one material disappeared from one block. Each blocks is composed of layers and interlayers lines. Knowing all the interlayers is important to link the layer mapping together (see Animation Model section).\\\\
-Each block contains a list of the materials composing its layers. Like said abbove we will compair it to the slice material to take into account erosion effect which cause layers to disappear. \\\\
-Each layer contains its interlayers,left and right sides and also its corners which are important for linking blocks together during the animation. The layer contains also its material which gives a lot information for the animation (density, friction, erosion speed, sedimentation speed). 
-In fact this information will be taken into consideration inside the mass spring system attached to the layer.
-Each fault contains each line composing it. Sub faults which we know that came after an other can be added.
-
+The main idea of our methods is to map a mass spring system on each block of the cross section applying an implicit euler scheme solving the Newton's second law while possibly freezing the physic of several blocks at each time step regarding the undoing geological event. The output of our method we will a series of inbetween VGC encoded in a VAC which will be played on VPaint.\\\\
+After drawing our section in VPaint we will read the XML output file in our tool  and add all the necessary information needed by the simulation as the layers' materials one containing in particular their deformation and friction coefficients. This information will allow us to run the animation over our section.\\
 
 \section{Animation Model}
 
@@ -313,7 +277,7 @@ Like mentionned above the animation will be done by mapping a mass-spring system
 \indent	- We put the masses on the borders in an uniform way.\\\\
 \indent	- We put the masses inside the layer: to do so we have two solutions:\\\\
 \indent \indent	- Compute hermite curve between each pair mass of the two interlayer and place particles uniformly on those curves.\\\\
-\indent \indent	- Compute the intersections between the previous hermite curves and the  one coming from each pair mass of the two sides and place particles at those intersections.\\\\
+\indent \indent	- Compute the intersections between the previous hermite curves and the one coming from each pair mass of the two sides and place particles at those intersections.\\\\
 	Even if the second solution might show better results that the first one we have chance that the curve comming from the sides might be not inside the layer due to big deformation making the layer non convex. \\With the first solution this problem is unlikely to occur because of the type of the deformations. In either case the hermite curves be created using a mass pair and the gradient of the broder at each extremity as tangents. This way the layer will tend to transform back to a rectangle shape.\\\\
 \indent	- Link particles with springs. \\We divide springs into 5 categories like described in \citep{cloth}: Vertical, Horizontal, DownShear, UpShear and Flexion. Adding flexion spring show better results in terms of shape preservation and breaking prevention. The resulting network looks like:\\
 	
@@ -499,6 +463,7 @@ Branch and Bound
 3D with more drawings
 Could have used clothoid
 let the user draw erosion line
+already determined eroded zones
 \section{Conclusion}
 
 
