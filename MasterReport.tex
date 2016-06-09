@@ -244,6 +244,8 @@ Finally during the simulation we will save the animation as VAC in an output XML
 
 As mentionned above our input drawing will be built using vpaint software which implements the VAC and VGC structures (refs).
 More preciselly we will use a VGC as input which is composed of vertices, edges and faces. This choice is justified by the fact that VGC can model all possible incidence relations between faces in 2D sketches and our cross-section is composed only of adjacent faces. An interesting feature of these structures is that each instance has a unique identifier and color which will allow us to build our geological structure.\\\\
+Here is an exemple of an input cross section using vpaint:
+%chartreuse section
 We will use the precendently described geological structure as our intern cross section data structure. In other words a drawing will be represented as a cross section which will be composed of blocks themselves composed of units. Because we consider that at the restoration state all units are straight rectangles, we decompose our units into two sides (left and right) znd two level boundaries (upper and bottom) which either make the links between unit or constitute the limits of the drawing. 
 %drawing
 Thus we must deduce those structure from the input vpaint file. \\\\\
@@ -251,18 +253,7 @@ To do so we use the colors of our edges and faces. When importing the drawing we
 
 When we have all our blocks created in our internal stucture we can identify the fault by looking at the color of the edges. If it is different than black or wite then it correspond to a fault which are caractarised by they color. The units are caracterized by their face color and their upper and bottom bounds which are drawn in white for most of them. Cross section border are usually drawn in black but we can deduce automatically which edge belongs to the lacking bound (limitation it is not always good).\\\\
 
-We then have all the different material age, the blocks and units objects and the different fault we can find in the drawing. We will store all these information into a configuaration file .geo which will allow the user to save time by not giving the material information each times he opens the file. We have to note that in the input XML file, faces have an arbitrary cycling orientation which can be clockwise or counterclockwise. That's why but for building and manipulating our structure more easelly we will choose the convention that all our units will be first read clockwiselly. Thus we reverse the faces which are written counterclockwisely
-
-III) Geological Structure Representation and Analysis
-		In our case we deal with sementary layers. It implies that each material is caracterized by its temporal existance.	
-	   	- Faults which can be seen as discontinuities in the XS
-		- Blocks which represent the groups of floors delimited by faults.
-		- Each Material is caracterised by a Young Modulus which describe its plasticy and elesticity,
-		an age period and a friction coefficient.
-
-Then we have to extract the structure out of this drawing. Meaning that we have to identify the different blocks, moduli, faults and materials from the drawing. To do so we proceed this way: the vpaint output format is an xml file which describe our drawing in terms
-of faces, edges and vertices. Each faces has a cycling orientation which is clockwise or counterclockwise and from the most recent (the higher in general) to the oldest. In fact it is an easy task to wirte the layers in the correct way but we need to find out which layers belong to the same block. To solve this issue we will use the interlayers and then the white edges. Two layers belong to the same block if they share a commun white edge. Thanks to this method we build our blocks. we can notice that the youngest and the oldest layer have just one interlayer that make them part of a block. However we will describe our layer with four part of the contours the upper interlayer, the righedges, the bottom interlayer and the left edges. Consequently for these two specific layer we will compute automatically the lacking interlayer (limitation it is not always good).
-\section{Continuous Simulation}
+We then have all the different material age, the blocks and units objects and the different fault we can find in the drawing. We will store all these information into a configuaration file .geo which will allow the user to save time by not giving the material information each times he opens the file. We have to note that in the input XML file, faces have an arbitrary cycling orientation which can be clockwise or counterclockwise. That's why but for building and manipulating our structure more easelly we will choose the convention that all our units will be first read clockwiselly. Thus we reverse the faces which are written counterclockwisely\\\\
 
 \section{General Overview}
 
@@ -276,7 +267,7 @@ Like mentionned above the animation will be done by mapping a mass-spring system
 \indent	- First we have to put the masses both at the layer border but also inside it.\\\\
 \indent	- We put the masses on the borders in an uniform way.\\\\
 \indent	- We put the masses inside the layer: to do so we have two solutions:\\\\
-\indent \indent	- Compute hermite curve between each pair mass of the two interlayer and place particles uniformly on those curves.\\\\
+\indent \indent	- Compute hermite curve between each pair mass of the two level bounds and place particles uniformly on those curves.\\\\
 \indent \indent	- Compute the intersections between the previous hermite curves and the one coming from each pair mass of the two sides and place particles at those intersections.\\\\
 	Even if the second solution might show better results that the first one we have chance that the curve comming from the sides might be not inside the layer due to big deformation making the layer non convex. \\With the first solution this problem is unlikely to occur because of the type of the deformations. In either case the hermite curves be created using a mass pair and the gradient of the broder at each extremity as tangents. This way the layer will tend to transform back to a rectangle shape.\\\\
 \indent	- Link particles with springs. \\We divide springs into 5 categories like described in \citep{cloth}: Vertical, Horizontal, DownShear, UpShear and Flexion. Adding flexion spring show better results in terms of shape preservation and breaking prevention. The resulting network looks like:\\
@@ -287,7 +278,7 @@ Like mentionned above the animation will be done by mapping a mass-spring system
 	\caption{Mass-Spring Mapping on a layer. In purple: interlayers. In white: sides}
 	\end{figure}
 	
-	
+	\indent	- In addition the stiffness of the springs which affect the way the unit deforms will be proportionnal to the unit material Young modulus. 
 \indent	- The springs we use will also have a torsion resistance in order to accentuate the shape change of the layer.\\\\
 In terms of physical equations for a single mass spring system we use the implicit euler scheme and algorithm descibed in \citep{caltech}. We use this scheme instead of an explicit one because it is proven to be more stable with big time step ($dt = 0.02$).\\\\ 
 Each particle has the same mass $m$ and possesses at step $n$:\\\\
@@ -367,19 +358,17 @@ F_{ij}^{torsion} = -k_{torsion}\Delta \theta \vec{n}
 \end{equation}
 
 with $\Delta \theta$ being the angle between a unit vector depending on the spring type (Vertical, Horizontal, DownShear or UpShear) and the vector $x_i - x_j$. $\vec{n}$ is the normal vector to $x_i - x_j$ pointing toward the unit vector.\\\\
-Having this physical structure we will simulate extension and take into account geological features. For the moment we assume that the density and the spring stiffnesses (elastic and torsion) are proportionnal. The friction coefficient will directly be taken into account in the collision computation between faults and particles. As for erosion and sedimentation we will add or remove partcle in the mass-spring system to simulate those events.\\\\
-Regarding the extension simulation we will first pull the side where the extension has to occur. This is known before simulating because it is provided by the user. At each time step we will freeze the animation of all the blocks, translate them toward extension apply the physics only to the blocks which are considered to move. The blocks moving undergo either discrete geological event (such as fault) or/and continuous event (erosion or sedimentation). When solving fault apparition we have to stick blocks together. This will be done by attaching corners of the layers when the matching ones are near each other enough. When all the corners are matched we have a new block where we must recompute a new mass spring system.\\\\
-Computing a mass spring system can take some time (few seconds for big systems) and can be noticable especially during block fusion but that is not a problem because the goal of the project is to record at each time step the result of our simulation as an inbetween vac which can be played fluently.\\\\
+
+Finally we can add a optionnal inverse dynamic step at the end of the scheme loop which consist in correcting spring angles which make quads or triangles to be inverted causing face self intersection. Actually the torsion we already apply helps to prevent for having this case it is not given. Consequently here we impose that $\theta < \frac{\pi}{2}$ 
+
+Computing a mass spring system can take some time (few seconds for big systems) and can be noticable especially during block fusion but that is not a problem because the goal of the project is to record at each time step the result of our simulation as an inbetween VAC which can be played fluently.\\\\
 
 \section{Dealing With Discrete Geological Events}\\
 
-As we mentionned before, geologist are usually able to restore the history of the cross section by using several geometrical and simulation tools.
-However then only get one final state of the section whcih represents what was the XS before any techtonic movement. Here we are interested in what 
-happened between today XS and the restoration. Indeed most of the time there are several scenarios that lead the initial state to the restoration.
-This is what we want in this project. We want to explore the most plausibles scenarios and see the resulting animation of exploration.
-To do so we will propose to the user to undo geological events at each time step. We can count already five events to undo : faults, erosion, sedimentation, folding and compaction. Those event will be automatically detected and resbored. In order to solve the issue properlly we'll use two graphs:
-	-Story graph
-	-Event graph
+As we mentionned before, geologists are usually able to restore the history of cross sections by using several geometrical and simulation tools. However they only get one sequence leading to the final state of the section which represents its the state before any techtonic movement. Here we are interested in what happened between today's section state and the restoration. Indeed most of the time, when restoring sections; there are several scenarios that lead the initial state to the restoration, that is why geolists often question others' hypothesis. This is exactly one of the main thread of this project. We want to explore the most plausibles scenarios and see the resulting animation of exploration.\\\\
+To do so we will propose to the user to undo geological events at each time step. We can count already four events we want to undo : faults, erosion, sedimentation and  folding. Those events will be automatically detected and resorbed most of the time. It is possible to detect automatically faults, erosion and sedimentation but folding is something not present in the drawing, the applied forces are not shown. Therefore the user has to provide the un-folding even, meaning he has to choose when and how we want to apply it.\\\\ 
+
+Like we mentionned in the general presentation of our solution, we will use a story tree to encode our events. However given the cross section we must determine the possible event to undo and also their time dependency with each other. For instance we know that the last event we will undo will be a sedimentation and this un-sediment event must come after un-erode or un-fold events if this kind of event occured. In order to take into account this time dependency between events we will use an Event Graph to encode it. On the other hand, the story tree will be stored within a Story Graph which will be build thanks to the Event Graph\\\\
 
 The Story graph represents the event paths we can run the simulation on. a node represents the list of event we can simulate at time t and an edge represents the event simulated between two nodes. Event graph used in the creation of this graph. It is the graph the user will explorer to see the animation of as many scenarios he wants to see.
 
