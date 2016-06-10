@@ -191,9 +191,7 @@ Software like LithoTect are very usefull because they allow geologist to build v
 
 Software like SLAMTec or OptumG2 run simulations over simpler models which are also physically consistent but the simulation will take less parameters and properties of the terrain, leading to faster computation time.\\
 Such tools can be used to validate a restoration. Indeed by running a simulation over the restoration geologist can see if what they produce seems coherent with the current state of the cross section even if those simulations can never produce the same result as this current state.\\\\
-
- This is one drawback of using those tool of forward simulation, even if we have a very fine representation of our model it can never achieve to retrieve a very similar correspondances and cannot validate by itself a restoration, geologists have to discuss the solution proposed.\\\\
- 
+ This is one drawback of using those tool of forward simulation, even if we have a very fine representation of our model it can never achieve to retrieve a very similar correspondances and cannot validate by itself a restoration, geologists have to discuss the solution proposed.\\\\ 
  However some physically based tool try to  solve this problem by proposing a backward simulation. This simulation is not simulating the "real" inverse of what happened to the current cross section but they run a finite element simulation with opposite forces and condition to what the geologist think that happened. For instance if the current section has been subject to compression forces the tool will apply extension forces to the model, same thing with compaction and other phenomena.\\\\
  Here is an example of "Dynel 2D" (ref) which implements this method:
  \begin{figure}[H]
@@ -215,7 +213,7 @@ Here we will opt for a backward simulation using a hybrid tool between geometric
 
 In this master thesis the main objective is to create a generic and interactive tool which builds different scenarios from a given drawing. The tool must give the user choices to make and allow him to come back on them. That's why similarly to Lidal (ref) we will use story trees to encode our scenarios.\\\\
 
-More generally the tool we want to create is bind by the structure of the input data, the enconding of our story and scenarios, the way of animating the drawing and the validation method. Because we also want our tool to be interactive, we need to propose an animation model which is fast enough to make its computations in a near real time way. Basically, the general workflow we will follow is: 1) Import the input drawing 2) Choose a scenario to play 3) Simulate it 4) Evaluate its plausibility 5) Loop on the scenario step while the user wants to explore different stories\\\\
+More generally the tool we want to create is bind by the structure of the input data, the enconding of our story and scenarios, the way of animating the drawing and the validation method. Because we also want our tool to be interactive, we need to propose an animation model which is fast enough to make its computations in a near real time way. Basically, the general workflow we will follow is: \\\\1) Import the input drawing\\\\ 2) Choose a scenario to play \\\\3) Simulate it \\\\ 4) Evaluate its plausibility 5) Loop on the scenario step while the user wants to explore different stories\\\\
 
 In our geological case we encounter lots of different topological configuration in the cross-sections. Indeed as we mentionned before our cross-section is composed of sedimentary layers, fault and blocks which are chunks of the section located between faults. Consequently each block contains part of superimposed layer which are called geological units (units for short) and their side show discontinuities with its neighbouring block. Each layer is colored with a unique color representing the period it has deposited. Topologicaly speaking our cross-section is a convex graph composed of faces representing the units, which means that every face as at least one neighbour and there are no isolated group of faces. The discontinuities we find in the cross section are due to faults creation caused by extreme folding conditions.\\\\
 
@@ -288,10 +286,10 @@ Like mentionned above the animation will be done by mapping a mass-spring system
 \indent	- First we have to put the masses both at the layer border but also inside it.\\\\
 \indent	- We put the masses on the borders in an uniform way.\\\\
 \indent	- We put the masses inside the layer: to do so we have two solutions:\\\\
-\indent \indent	- Compute hermite curve between each pair mass of the two level bounds and place particles uniformly on those curves.\\\\
-\indent \indent	- Compute the intersections between the previous hermite curves and the one coming from each pair mass of the two sides and place particles at those intersections.\\\\
-	Even if the second solution might show better results that the first one we have chance that the curve comming from the sides might be not inside the layer due to big deformation making the layer non convex. \\With the first solution this problem is unlikely to occur because of the type of the deformations. In either case the hermite curves be created using a mass pair and the gradient of the broder at each extremity as tangents. This way the layer will tend to transform back to a rectangle shape.\\\\
-\indent	- Link particles with springs. \\We divide springs into 5 categories like described in \citep{cloth}: Vertical, Horizontal, DownShear, UpShear and Flexion. Adding flexion spring show better results in terms of shape preservation and breaking prevention. The resulting network looks like:\\
+\indent \indent	- Compute Hermite curve between each pair mass of the two level bounds and place particles uniformly on those curves.\\\\
+\indent \indent	- Compute the intersections between the previous Hermite curves and the one coming from each pair mass of the two sides and place particles at those intersections.\\\\
+	Even if the second solution might show better results that the first one we have chance that the curve comming from the sides might be not inside the layer due to big deformation making the layer non convex. \\With the first solution this problem is unlikely to occur because of the type of the deformations. In either case the Hermite curves be created using a mass pair and the gradient of the broder at each extremity as tangents. This way the layer will tend to transform back to a rectangle shape.\\\\
+\indent	- Link particles with springs. \\\\We divide springs into 5 categories like described in \citep{cloth}: Vertical, Horizontal, DownShear, UpShear and Flexion. Adding flexion spring show better results in terms of shape preservation and breaking prevention. The resulting network looks like:\\
 	
 	\begin{figure}[H]
 	\centering
@@ -299,7 +297,7 @@ Like mentionned above the animation will be done by mapping a mass-spring system
 	\caption{Mass-Spring Mapping on a layer. In purple: interlayers. In white: sides}
 	\end{figure}
 	
-	\indent	- In addition the stiffness of the springs which affect the way the unit deforms will be proportionnal to the unit material Young modulus. 
+	\indent	- In addition the stiffness of the springs which affect the way the unit deforms will be proportionnal to the unit material Young modulus. \\\\
 \indent	- The springs we use will also have a torsion resistance in order to accentuate the shape change of the layer.\\\\
 In terms of physical equations for a single mass spring system we use the implicit euler scheme and algorithm descibed in \citep{caltech}. We use this scheme instead of an explicit one because it is proven to be more stable with big time step ($dt = 0.02$).\\\\ 
 Each particle has the same mass $m$ and possesses at step $n$:\\\\
@@ -410,85 +408,75 @@ Here we presents the way of simulating those events:
 Un-sedimenting a layer consist in removing sediment progressively when the upper bound of the layer is perfectly horizontal as it is an unbreakable rule in geology.\\\\
 
 In a sequence we will simulate the layer's thickness shrinking like:
-
 %Dessin
-
 \textbf{Precondition:} the layer's upper bound must be horizontal and the layer must be the youngest in the section.\\\\
 \textbf{Simulation:} we progressively decrease the equilibrium length of vertical springs until it reaches $0$ for all the vertical springs when the event end.\\\\
 \textbf{Duration:} given by material's age we want to un-sediment.\\\\
 \textbf{Postcondition:} the layer must have desappeared letting a new layer to be the youngest 
 in the section.\\\\
-
 \textbf{Postcomputation:} regenerate the mass-spring system of the containing block at the end of the event.\\\\
 
 \subsection{Un-Erode}
 
-In the cross section the erosion impact can be noticed by variation of thickness in the same layer. However, it can have different effects topologicaly speaking depending on where it is applied. Here we will distinguish three different cases of erosion because of their topological and geometrical effects.\\\\
+In the cross section the erosion impact can be noticed by variation of thickness in the same layer. However, it can have different effects topologicaly speaking depending on where it is applied. Here we will distinguish three different categories of erosion because of their topological and geometrical effects.\\\\
 
 \subsection{Un-Erode block side}
 
-Here we look at the erosion that occured at the side of the blocks which creates concavites and reduce the thickness of layers at some places. Here we will try to fill the concavities we can detect if they appear to have been created by an erosion process such as:
+Here we are interested in the erosion that occured at the side of the blocks which creates concavites and reduce the thickness of layers at some places. Here we will try to fill the concavities we can detect if they appear to have been created by an erosion process such as:
 
 %dessin
+This event is applicable to any surface module of the cross section.\\\\
+\textbf{Precondition:} A concavity must be detected in the unit's sides. Here we are not interested in detecting all the concavities in the sides because some of them might have been caused by other events than erosion such as folding. Moreover we are interested in concavities which are between the upper corners of the units and its side. To be more precise we will fill an area between a upper side corner and the farthest side particle where there is a concavity in between. Progressively starting by the upper masses of the side and going down, we will look at the segment between the upper corner of the side and the considered particle. If the segment do not intersect the unit itself, then it is considered as a concavity. The final segment which we are interested in is the concavity segement between the corner and the farthest particle on the side. We store this particle and if it is different from the particle right after the corner then it means that there is a concavity to fill and the precondition is fulfilled.\\\\
+\textbf{Simulation:}  Starting from this found farthest particle, we will compute the normal att his point and create a new mass following the line beginning at the found particle and directed by the normal. The new mass will be created at the point of same high than the upper corner in the normal line. This point will be the new corner of the unit and expand it as the new side will be projected toward the computed normal line.\\\\
+\textbf{Duration:} given by the user.\\\\
+\textbf{Postcondition:} the side that has been un-eroded must not intersect other units.\\\\
+\textbf{Postcomputation:} regenerate the mass-spring system of the containing block at the end of the event.\\\\
 
+\subsection{Un-Erode surface upper bounds}
+
+Having treated the case of side erosion, we want also to un-do erosion that affected the upper surface of layers. Here concavities are not the only target we want to focus on. In this case erosion can easely let the surface being convex, so we will try to detect zones where the thickness of the layer decreased. Therefore we will look for zones in the upper bound where the curvature suddenly changed.\\\\
+%dessin
+\textbf{Precondition:} the upper bound must be at the surface and must have either a concavity or a changing curvature at some point. To detect convaties this time we use mathematical properties of the upper bound curve because we don't want to miss one as any concavity can be a product of erosion in this case. Therefore we look at the upper bound as being a discretized parametric curve $(x(t),y(t))$ and we search for concavities. To do so we will compute the speed vector $(x'(t),y'(t))$ and the acceleration vector $(x''(t),y''(t))$ and look at the sign of $det(v(t),a(t))$. If it is negative it means that the curve is concave. Thus we search for every concave areas which are intervals $[t_0,t_1]$ where the the curve is concave. We can also check if the curve has a big change in its curvature and if this change doesn't create a concavity. This is likely to happen  in holes which dug through several layers. Here the eroded part of the surface upper bound is likely to be eroded even being convex. Here the change in curvature might be noticable and we propose to the user to un-erode those units when we detect such a unit configuration. As a consequence whenever we detec a surface bound in a hole which divided at least one unit into two we propose the un-erode event for a part the surface curve in an interval $[t_0,t_1]$ just like before.\\\\
+\textbf{Simulation:} In both cases we will use Hermite curve to fill the lacking matter. We will use them with the following coefficients $I(t_0), I(t_1)$ which are the points at the beginning and the end of the eroded curve and $I(t_0) - I(t_0 - 1), I(t_1) - I(t_1 + 1)$  as tangent respectively at point $I(t_0)$ and point $I(t_1)$. Then we deform the current curve making it matching the computed Hermite curve. By proceeding this way we will fill abnormalities in the layers following the trajectory the curve should have if we un-erode it.\\\\
+\textbf{Postcondition:} the abnormalities must have been filled.\\\\
+\textbf{Postcomputation:} regenerate the mass-spring system of the containing block at the end of the event.\\\\
+\subsection{Un-Erode two facing units of the same Material}
+
+Here we are interested in the case where erosion happened in the middle of a layer, making a hole a dividing it into several units. We can note that this can happen for units which are in the same block but also for units in neighbouring blocks. Here we will merge the two divided unit by adding an interpolated part bewteen them.\\\\
+%drawing
+\textbf{Precondition:} the two units must face each other in all cases and not in contact in a fault if there are on different blocks. It is obvious that they should be of the same material. Finally if there are in a hole that divided older layers we cannot un-do this erosion before un-doing the erosion of those layers.\\\\
+\textbf{Simulation:} Here we will use Hermite curve again for the same reason of preserving the curvature continuity. If we are in the case of units between blocks, we will use an Hermite curve joining the two upper bounds and one joining the two bottom bounds and fill the zone delimited by these two curves. If we are in the case of two units in the same block we only need to interporlate the upper bound as the bottom bound already exist.\\\\
+\textbf{Postcondition:} the two units must have merged into a new one.\\\\
+\textbf{Postcomputation:} regenerate the mass-spring system of the containing block at the end of the event.\\\\
+\subsection{Un-Erode special case}
+
+Finally we identified a last case of erosion which correspond to the following configuration.\\\\
+%dessin
+Here we can wonder if the yellow unit has been eroded.  It seems that there is lacking matter on the red unit and we want to add yellow sediment fill the surface part of this unit. However geologically speaking here we observe that the units are highly deformed and so the lacking part might not be one and the yellow sediment has only deposited in the left side because of relief shape. In the case we want to un-erode  the yellow unit we have add enough matter to fill all the red unit surface.\\\\
+\textbf{Precondition:} the concerned unit must have free surface upper bound of the unit just under him.\\\\
+\textbf{Simulation:} Here we just extend the concerned unit until the end of the free surface while increasing its thickness if it is necessary for filling the lacking part.\\\\
+\textbf{PostCondition:} All the free surface bound must have been filled by the concerned unit sediment.\\\\
+\textbf{Postcomputation:} regenerate the mass-spring system of the containing block at the end of the event.\\\\
 \subsection{Un-Fold}
+
+Un-Folding basically means applying forces on blocks, units or particles of the section. Theses forces can be applied in any manner such as uniformly or linearly. It is a event which is most of the time added by the user but plays also a major role in the un-fault event.\\\\
+%dessin
+\textbf{Precondition:} there are no preconditions for this event. the user is free to play with this event as it allows geologists to test their hypothesis on forces that have been applied to the section in the past.\\\\
+\textbf{Simulation:} We add external forces either to a block, a unit or a specific mass during the requested time. The external forces are taken into account in the main physical loop.\\\\
+\textbf{Duration:} given by the user.\\\\
+\textbf{Postcondition:} he event no longer apply forces on the concerned particles.\\\\
 
 \subsection{Un-Fault}
 
-
-Evaluation functions
-
-Faults: subdivided into modulus event
-	Our XS contains what is called fault which corresponds to the breaking of a block into two parts and only two parts. Geologically speaking when a fault begin to open, it splits the block starting by the oldest moduli that is to say from bottom to up. 
-	
-	We will use this property to decompose our un fault event into several stickModulus events. As we just said the fault split the block into two parts (which are new blocks) and one part is inevitably above the other in terms of y coordinates. Meaning that the corners of each modulus of the upper block is higher than the respecting corners of each modulus of the lower block (see the exemple below). 
-	
-	As a result the modulus event will correspond to applying forces to the lower block in order to unfold it and make the upper modulus converging to the respecting modulus and then stick together the two moduli when they face each other in terms of y coordinates.
-	
-	Once all moduli event have ended the fault event can end as well.
-	
-	-The preconditions are: the fault must concern two blocks and only two blocks. Some faults take root on other ones making them in contact of more than two blocks. 
-	
-	-The posconditions are: all the modulus events ended mening that all the moduli that should have be stuck together are now merged into one modulus. That implies that the two concerned blocks merged and the mass spring mesh should be regenerated for better uniformity 
-	
-	How it is done: The fault we want to close is dividing a block into two parts, with one being above the other. We know that the cause of the breaking was folding. Thus we apply to the lower block the exact opposite force that was applied during the folding. For instance if the force applied was a compression pointing toward the left we will apply a force toward the right. Furthermore we have to freeze the movement of the masses of the two concerned blocks that belongs to other faults because we don't want to close those ones yet. Thus if the lower block belongs to another fault the opposite force we apply we create a momentum on the block instead of a translation and will force it being in the same position before the breaking. At the same time the upper block will slowly slide on the lower block causing them to stick together when moduli are at the same high. In addition because of un-detected erosion and small folding events we have to add a additionnal force to the upper block which will make each modulus going toward its corresponding modulus in the lower block. To do so we apply attraction forces $\overrrightarrow{F} = d*\frac{\overrightarrow{(C_{lower} - C_{upper})} }{||\overrightarrow{(C_{lower} - C_{upper})}||}$to the corners of each modulus of the upper block going toward the corresponding corners of the matching modulus. Finally when all the matching moduli have stick together we regenerate the mass-spring system for uniformity sake.
-
-Erode: three types of erosion
-	We can identify 4 types of unErode events:
-		-unErode youngest moduli :
-			here we will search for concavities at the upperside of the youngest moduli and resobe them 
-			preconditions : the concerned modulus must be of the youngest material among its block, meaning it is the upper moduli.
-			postCondition : the concavities must have been resolved.
-			How it is done: Here we look at the upperlayer as being a discretized parametric curve $x(t),y(t)$ and we search for concavities. To do so we will compute the speed vector $x'(t),y'(t)$ and the acceleration vector $x''(t),y''(t)$ and look at the sign of $det(v(t),a(t))$. If it is negative it means that the curve is concave. Thus we search for every concave areas which are intervals $[t_1,t_2]$ where the the curve is concave. Then we have to correct each detected area. To do so we will use hermit curves with the following coefficients $I(t_0), I(t_1)$ which are the points at the beginning and the end of the concavity and $I(t_0) - I(t_0 - 1), I(t_1) - I(t_1 + 1)$  as tangent respectively at point $I(t_0)$ and point $I(t_1)$.Then we deform the current curve making it matching the computed hermit curve. By proceeding this way we will fill the concavities following the trajectory the curve should have if we un-erode it.
-			
-		- unErode modulus which is in a gap:
-			here we will search for up edges which are at the surface but which don't belong to the yongest modulus of the block. Meaning that those edges are the bottom of a hole which is the product of an erosion. We try to resobrbe matter that could have been eroded at those points.
-			
-			precondition : the modulus must have a edge at the surface without being the youngest modulus of its block
-			postcondition: the modulus has been corrected with matter being added.
-			
-			How it is done: Here we will proceed the exact same way than the previous case except that we won't search for concavities at the upper interlayer but we will try to correct the curve whenever the curve is at the surface, meaning that it joins to corners of younger moduli which are of the same material composition. We will use the corners as starting and ending point of the curve and we will consider the tangent at those point the same way as we computed them previously. Here we don't search for concavities and try to correct the curve in any cases because we can assume than it the concerned modulus was eroded because the erosion divided the modulus jus above it at least in two parts.
-		- unErode sides of moduli:
+Here we will describe the un-fault event which has special feature of been a composed event. Indeed we considered that the un-fault event is the concatenation of three events: un-erode, un-slide and un-fold. As an un-fault event can only occur between two blocks (and only two) we will proceed by first un-eroding units which are not in contact and then making one block sliding on the other while un-folding the whole cross-section. We can note that when an fault occur, it breaks one block starting by the oldest layer to the youngest. We will use this property to decompose our un fault event into several stickUnits events for units we don't un-erode at the beginning of the un-fault event.\\\\
+% dessin
+Before explaining the un-fault event, we will present the simple stickUnit event. There are no preconditions has it is the created and called by the fault event which manage preconditions. This event wait for matching unit to be face to face and merge them when there are. In addition as fault can be created by extreme folding condition we apply an little attraction force on the sliding unit in order to fold it like it was at the moment of the break. Thus we apply $\overrrightarrow{F} = d*\frac{\overrightarrow{(C_{lower} - C_{upper})} }{||\overrightarrow{(C_{lower} - C_{upper})}||}$ to the corners of the sliding unit going toward the corresponding corners of the matching unit.\\\\
+We can now detail the un-fault event.\\\\
+\textbf{Precondition:} The fault must be between two blocks and only two of them.\\\\
+\textbf{Simulation:} We first ask the user if he wants to un-erode units which are not in contact in the fault using the "Un-Erode two facing units of the same Material" algorithm we describe before. Then we create the stickUnits event for each matching unit, they will be simulated one after the other starting by the youngest units to the oldest. At the same time we will let one block to slide on the other (the upper one in the case of the compression, the lower one if it is an extension) and fold on one extremity of the cross section depending if we are in a compression or extension and depending the direction of folding. This event ends when all the stick events have also ended.\\\\
+\textbf{Postcondition:} all the sticking events ended meaning that all matching units merged together one new unit. That implies that the two concerned blocks merged.\\\\
+\textbf{Postcomputation:} regenerate the mass-spring system of the containing block at the end of the event for a better mesh uniformity.\\\\ 
 		
-			here we are interested at the erosion that happen at the side of moduli and we will also search for concavities in the side of moduli. However we will solve and detect concavities differently than the previous methods because we will take into account the geoloical aspect.
-			
-			precondition: no preconditions
-			postconditions: the side that has been unEroded must not collide with other moduli
-			How it is done: Here we will also search for concavities but not at the same place and not the same way than before. First we only look at the left and right side of the modulus here. In fact on these sides there are some concavties that are not due to erosion but just on the way the sediment have deposited and the way the terrain has been fold. Consequently we are only interested at the concavities that only start at the upper corners of the modulus. Then we don't have to compute the derivatives of the curve and we will correct the concavity differently than before. In order to detect the convaties we will consider all the strings between the upper corner (left or right) and the points of the respecting side and see if it intersects the modulus or not. Then we consider the non intersecting string between the upper corner and the side point which is the farthest of the corner in terms of index (if we consider the size having points starting at index $0$ and finishing at index $side_size - 1$). Starting from this side point we will compute the normal at his point and create a new mass following the line beginning at the side point and directed by the normal. The new mass will be created at the point of same high than the upper corner in the line. This point will be the new corner of the modulus and expand it because the side will be moved toward the computed normal line.
-		- unErode two moduli of the same material in the same block.
-		
-		precondition: the moduli must be of the same material and in the same block. In addition they must be facing each other without any modulus between them. 
-		postconditions: the gap between the two moduli must have been filled and the mass-spring system msut have been regenerated.
-		How it is done: We proceed the same way than the unErode modulus which is in gap case but this time we will not deform an existing curve but we will create a interlayer up between the two concerned moduli using the hermit curve the same way. The starting and ending points will be the corners while the tangent will be the derivatives according to ths neigbouring point.
-		
-Fold:
-	The preconditions are: there are no precondition for this event. the user is free to play with this event as it allows geologists to test their hypothesis on forces that have been applied to the XS in the past and with a duration.
-	
-	The posconditions are: the event no longer apply forces on the concerned particles
-	
-	How it is done: It is quite simple to apply. We add external forces either to a block, a modulus or a specific mass during the requested time. The external forces are taken into account in the main physical loop.
-	
-
 \section{Scheduling and Proposing Events}
 
 We presented how the different events are simulated and how the user can choose different scenarios. We will now present the way of proposing the possible events using the Event Graph and some other techniques in order to give the user the means for restoring the cross section.\\\\
@@ -517,19 +505,19 @@ As a consequence we must build evaluation function for each proposed event which
 
 \section{Results}
 \section{Limitations}
-3D with more drawings
-Could have used clothoid
-let the user draw erosion line
-already determined eroded zones
-big limitation it is not geologicaly good because we don't look at the layer thickness
+- 3D with more Cross sections\\
+- Could have used clothoid for preserving layer thickness\\
+- Sequential and not list of un-doing events\\
+- Let the user draw erosion line -- already determined eroded zones\\
+- Thickness limitation: it is not geologicaly good because we don't look at the layer thickness.
 \section{Conclusion}
 
 
 
-	
+\section{Annex}
 
-Hermit curves equations :\\
-Given two points $P_0, P_1$ and two tangents $T_0, T_1$ being the tangent we can find at the matching number points, the hermit interpolation which will produce a $C_1$ curve has for equation : 
+Hermite curves equations :\\
+Given two points $P_0, P_1$ and two tangents $T_0, T_1$ being the tangent we can find at the matching number points, the Hermite interpolation which will produce a $C_1$ curve has for equation : 
 
 
 \begin{equation}
@@ -558,7 +546,6 @@ With this parametrisation the two segments intersect if and only if:\\
 We need to extract two equations from this one in order to find $u$ and $t$.
 To do so we will use the cross product to keep only one variable in each equation. Thus by applying a cross product with $\overrightarrow{PQ}$ and $\overrightarrow{RS}$ we obtain the following equations:
 
-
 \begin{align}
 	t &= \frac{\overrightarrow{(R - P)} \wedge \overrightarrow{RS}}{\overrightarrow{PQ} \wedge \overrightarrow{RS}}\\
 	u &= \frac{\overrightarrow{(P - R)} \wedge \overrightarrow{PQ}}{\overrightarrow{RS} \wedge \overrightarrow{PQ}}
@@ -566,23 +553,16 @@ To do so we will use the cross product to keep only one variable in each equatio
 
 We must note that the simplification was made by noticing that $\overrightarrow{PQ} \wedge \overrightarrow{PQ} = 0$ and $\overrightarrow{RS} \wedge \overrightarrow{RS} = 0$.
 
-Then we can distinguish $4$ cases :
-1) $ \overrightarrow{RS} \wedge \overrightarrow{PQ} = 0$ and $\overrightarrow{(P - R)} \wedge \overrightarrow{PQ} = 0$
-
-This means that our segments are parrallel because of the first condition and colinear because of the second. We deduce that our segement are intersecting 
-iff :
-
-if ($\overrightarrow{PR}.\overrightarrow{PS} < 0$) or ($\overrightarrow{PR}.\overrightarrow{PS} >= 0$ and $\overrightarrow{PQ}.\overrightarrow{PS} >= 0$ and ($||\overrightarrow{PS}|| < ||\overrightarrow{PQ}||$ or $||\overrightarrow{PR}|| < ||\overrightarrow{PQ}||$))
-
-2)  $ \overrightarrow{RS} \wedge \overrightarrow{PQ} = 0$ and $\overrightarrow{(P - R)} \wedge \overrightarrow{PQ} != 0$
-In that case the sgements are parallel but non intersecting.
-
-3)  $ \overrightarrow{RS} \wedge \overrightarrow{PQ} != 0$.
-The segment are intersecting iff the computation of $t$ and $u$ gives $t,u \in [0,1]$
-
-4) Otherwise the segements are not parallel and non intersecting
-
-
+Then we can distinguish $4$ cases :\\\\
+1) $ \overrightarrow{RS} \wedge \overrightarrow{PQ} = 0$ and $\overrightarrow{(P - R)} \wedge \overrightarrow{PQ} = 0$\\\\
+This means that our segments are parrallel because of the first condition and colinear because of the second. We deduce that our segement are intersecting if: \\\\ 
+($\overrightarrow{PR}.\overrightarrow{PS} < 0$) or ($\overrightarrow{PR}.\overrightarrow{PS} \geq 0$ and $\overrightarrow{PQ}.\overrightarrow{PS} \geq 0$ and ($||\overrightarrow{PS}|| < ||\overrightarrow{PQ}||$ or $||\overrightarrow{PR}|| < ||\overrightarrow{PQ}||$))
+\\\\\
+2)  $ \overrightarrow{RS} \wedge \overrightarrow{PQ} = 0$ and $\overrightarrow{(P - R)} \wedge \overrightarrow{PQ} \neq 0$
+In that case the segeents are parallel but non intersecting.\\\\
+3)  $ \overrightarrow{RS} \wedge \overrightarrow{PQ} \neq 0$.
+The segment are intersecting iff the computation of $t$ and $u$ gives $t,u \in [0,1]$\\\\
+4) Otherwise the segements are not parallel and non intersecting\\\\
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.5]{slamtec.png}
