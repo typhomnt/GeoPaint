@@ -444,14 +444,31 @@ Having treated the case of side erosion, we want also to un-do erosion that affe
 
 Here we are interested in the case where erosion happened in the middle of a layer, making a hole a dividing it into several units. We can note that this can happen for units which are in the same block but also for units in neighbouring blocks. Here we will merge the two divided unit by adding an interpolated part bewteen them.\\\\
 %drawing
+\begin{figure}[h]
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.2]{unErodeTwoLayersDescription0.png}
+	\caption{Un-Erode two facing units of the same Material in the same block example. Starting Configuration}
+    \end{minipage}
+    \hfill%
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.2]{unErodeTwoLayersDescription1.png}
+	\caption{Un-Erode two facing units of the same Material in the same block example. Ending Configuration}
+    \end{minipage}
+\end{figure}\\
 \textbf{Precondition:} the two units must face each other in all cases and not in contact in a fault if there are on different blocks. It is obvious that they should be of the same material. Finally if there are in a hole that divided older layers we cannot un-do this erosion before un-doing the erosion of those layers.\\\\
 \textbf{Simulation:} Here we will use Hermite curve again for the same reason of preserving the curvature continuity. If we are in the case of units between blocks, we will use an Hermite curve joining the two upper bounds and one joining the two bottom bounds and fill the zone delimited by these two curves. If we are in the case of two units in the same block we only need to interporlate the upper bound as the bottom bound already exist.\\\\
 \textbf{Postcondition:} the two units must have merged into a new one.\\\\
 \textbf{Postcomputation:} regenerate the mass-spring system of the containing block at the end of the event.\\\\
 \subsection{Un-Erode special case}
 
-Finally we identified a last case of erosion which correspond to the following configuration.\\\\
-%dessin
+Finally we identified a last case of erosion which corresponds to the following configuration:\\\\
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{unErodeSpecial.png}
+	\caption{Un-erode special case}
+\end{figure}
 Here we can wonder if the yellow unit has been eroded.  It seems that there is lacking matter on the red unit and we want to add yellow sediment fill the surface part of this unit. However geologically speaking here we observe that the units are highly deformed and so the lacking part might not be one and the yellow sediment has only deposited in the left side because of relief shape. In the case we want to un-erode  the yellow unit we have add enough matter to fill all the red unit surface.\\\\
 \textbf{Precondition:} the concerned unit must have free surface upper bound of the unit just under him.\\\\
 \textbf{Simulation:} Here we just extend the concerned unit until the end of the free surface while increasing its thickness if it is necessary for filling the lacking part.\\\\
@@ -461,6 +478,19 @@ Here we can wonder if the yellow unit has been eroded.  It seems that there is l
 
 Un-Folding basically means applying forces on blocks, units or particles of the section. Theses forces can be applied in any manner such as uniformly or linearly. It is a event which is most of the time added by the user but plays also a major role in the un-fault event.\\\\
 %dessin
+\begin{figure}[h]
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.2]{unFoldDescription0.png}
+	\caption{Un-Fold example. Starting Configuration}
+    \end{minipage}
+    \hfill%
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.2]{unFoldDescription1.png}
+	\caption{Un-Fold example. Ending Configuration}
+    \end{minipage}
+\end{figure}
 \textbf{Precondition:} there are no preconditions for this event. the user is free to play with this event as it allows geologists to test their hypothesis on forces that have been applied to the section in the past.\\\\
 \textbf{Simulation:} We add external forces either to a block, a unit or a specific mass during the requested time. The external forces are taken into account in the main physical loop.\\\\
 \textbf{Duration:} given by the user.\\\\
@@ -470,6 +500,19 @@ Un-Folding basically means applying forces on blocks, units or particles of the 
 
 Here we will describe the un-fault event which has special feature of been a composed event. Indeed we considered that the un-fault event is the concatenation of three events: un-erode, un-slide and un-fold. As an un-fault event can only occur between two blocks (and only two) we will proceed by first un-eroding units which are not in contact and then making one block sliding on the other while un-folding the whole cross-section. We can note that when an fault occur, it breaks one block starting by the oldest layer to the youngest. We will use this property to decompose our un fault event into several stickUnits events for units we don't un-erode at the beginning of the un-fault event.\\\\
 % dessin
+\begin{figure}[h]
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.2]{unFaultDescription0.png}
+	\caption{Un-Fault example. Starting Configuration}
+    \end{minipage}
+    \hfill%
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \includegraphics[scale=0.2]{unFaultDescription1.png}
+	\caption{Un-Fault example. Ending Configuration}
+    \end{minipage}
+\end{figure}
 Before explaining the un-fault event, we will present the simple stickUnit event. There are no preconditions has it is the created and called by the fault event which manage preconditions. This event wait for matching unit to be face to face and merge them when there are. In addition as fault can be created by extreme folding condition we apply an little attraction force on the sliding unit in order to fold it like it was at the moment of the break. Thus we apply $\overrrightarrow{F} = d*\frac{\overrightarrow{(C_{lower} - C_{upper})} }{||\overrightarrow{(C_{lower} - C_{upper})}||}$ to the corners of the sliding unit going toward the corresponding corners of the matching unit.\\\\
 We can now detail the un-fault event.\\\\
 \textbf{Precondition:} The fault must be between two blocks and only two of them.\\\\
@@ -503,8 +546,15 @@ As a consequence we must build evaluation function for each proposed event which
 
 \section{Implementation}
 
+Almost every parts of our geological tool has been implemented in C++. We propose a Qt OpenGL interface where the user can load vec files or geo files which are configuration files created after reading a vec file which store additionnal information entered by the user when he openned the corresponding vec file. It is time saving for users who don't want to enter several times the same additionnal information for  given a cross section. \\\\
+We implemented our tool using both geological stucture and the parts of VGC one. We used the base structure of VGC such as \textbf{Vertex}, \textbf{Edge} and \textbf{Face} inheriting from \textbf{Cell} which possesses an attribute \textbf{Id} allowing to identify a instance uniquely. This feature is important for manipulating this structures which will be encompassed in our geological framework. Indeed as we implemented our geological data structure following cross sections' organisation we need identtification information for our units, blocks and faults.\\\\
+To be more accurate we implemented the cross-section structure in a hierarchical way: the \textbf{Crosssection} class contains a vector of \textbf{Block} containing a vector of \textbf{Unit} which possesses a \textbf{MassSpringSystem}. In addition this hierarchy is a two way one, meaning that each member of the hierarchy has access to its parent.\\\\
+The story telling part has also been implemented and represent the most generic part because it is templated and can be used directly to any other context than geology. The \textbf{Story Graph} is a 
 \section{Results}
+We ran our system over several examples including unit tests which show how we simulate each geological events.
+Our main example we 
 \section{Limitations}
+
 - 3D with more Cross sections\\
 - Could have used clothoid for preserving layer thickness\\
 - Sequential and not list of un-doing events\\
@@ -524,7 +574,7 @@ Given two points $P_0, P_1$ and two tangents $T_0, T_1$ being the tangent we can
 h(t) = (2*t^3 - 3*t^2 + 1)*P_0 + (t^3 - 2*t^2 + t)*T_0 + (t^3 -t^2)*T_1 +(3*t^2 - 2*t^3)*P_0
 \end{equation}
 
-It is possible to multiply the tangent by a bias factor which will make the curvature of the curve varying more when this factor becomes big.
+It is possible to multiply the tangent by a bias factor which will make the curvature of the curve varying more when this factor becomes big.\\\\\
 
 Collisions methods: \\
 
