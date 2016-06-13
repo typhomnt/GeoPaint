@@ -1,4 +1,4 @@
-\documentclass[12pt, a4paper]{memoir} % for a short document
+\documentclass[12pt, a4paper]{report} % for a short document
 \usepackage[english]{babel}
 \usepackage{blindtext}
 \usepackage [vscale=0.76,includehead]{geometry}              
@@ -8,8 +8,8 @@
 \usepackage{helvet} % font sf = helvetica
 \usepackage[latin1]{inputenc}
 \usepackage{relsize}
-\setsecnumdepth{subsection}
-%\setcounter{secnumdepth}{3}
+%\setsecnumdepth{subsection}
+\setcounter{secnumdepth}{3}
 \usepackage{tocloft}
 %\def\cftchapteraftersum{.}
 \oddsidemargin 0.0cm  
@@ -37,146 +37,109 @@
   language=C, 
   frame=L
   } 
-\pagestyle{book}
+%\pagestyle{book}
 \bibliographystyle{plain}
-
-% Title page formatting -- do not change!
-\pretitle{\HUGE\sffamily \bfseries\begin{center}} 
-\posttitle{\end{center}}
-\preauthor{\LARGE  \sffamily \bfseries\begin{center}}
-\postauthor{\par\end{center}}
-
-\newcommand{\jury}[1]{% 
-\gdef\juryB{#1}} 
-\newcommand{\juryB}{} 
-\newcommand{\session}[1]{% 
-\gdef\sessionB{#1}} 
-\newcommand{\sessionB}{} 
-\newcommand{\option}[1]{% 
-\gdef\optionB{#1}} 
-\newcommand{\optionB}{} 
-
-\renewcommand{\maketitlehookd}{% 
-\vfill{}  \large\par\noindent  
-\begin{center}\juryB \bigskip\sessionB\end{center}
-\vspace{-1.4cm}}
-\renewcommand{\maketitlehooka}{% 
-\vspace{-1.4cm}\noindent\includegraphics[height=14ex]{logoINP.png}\hfill\raisebox{2ex}{\includegraphics[height=7ex]{logoUJF.jpg}}\\
-\bigskip
-\begin{center} \large
-Master of Science in Informatics at Grenoble \\
-Master Math\'ematiques Informatique - sp\'ecialit\'e Informatique \\ 
-option \optionB  \end{center}\vfill}
-% End of title page formatting
-
-\option{$<$GVR$>$}
-\title{ Inverse Procedural Generation of Geological Stories}
-\author{Garcia Maxime}
-\date{ $<$June 23rd 2016$>$} % Delete this line to display the current date
-\jury{
-Research project performed at $<$INRIA Monbonnot$>$ \\\medskip
-Under the supervision of:\\
-$<$Dr. R\'emi Ronfard ,INRIA$>$\\\medskip
-Defended before a jury composed of:\\
-$[$Mr$]$ $<$George-Pierre Bonneau$>$\\
-$[$Mr$]$ $<$James Crowley$>$\\
-$[$Mr$]$ $<$Edmon Boyer$>$\\
-$[$Mr$]$ $<$Jean-S\'ebastien Franco $>$\\
-$[$Mr$]$ $<$last-name$>$\\
-}
-\session{$[$June$]$\hfill 2016}
-
 
 \begin{document}
 \selectlanguage{english}
-\frontmatter
-\begin{titlingpage}
-\maketitle
-\end{titlingpage}
-
 
 \tableofcontents
 
 \chapter{Abstract}
 
 This thesis addresses the problem of restoring the complete history of a 2D geological 
-subsurface also called a cross-section \cite{BalancedCrossSections}. It is a key problem for geologists when they want to understand how the terrain transformed to be in state it is today. Moreover it allows them to date geological events such as faults, erosion or sedimentation. It is also a major issue for oil searchers because by looking at the cross section evolution they can deduce places where oil is likely to be trapped in. Tools to tackle this problem have already been created and can  be categorized into two kinds: geometrical based tools which deform the initial cross-section relying only on geometrical and kinematical property of the drawing and physical based ones which focus on runninng a simulation using physical equation applied to the section in order to deform it. However those tools usually restore only one scenario of the cross-section history when several of them can exist.\\\\
- Here, we propose a new hybrid method which focuses on proposing multiple scenarios of the cross section restoration. As an input we take a cross section drawing containing topological data and we will map mass spring system on it, which is the center of our animation process. In addition we propose to the user to choose among possible events to transform the cross section to its restoration state and simulate the selected ones. Each time an event simulation end we ask the user to make another event choice until there are no event to propose left. One main feature of our methods is that the user is able to come back to its previous choices and create an other scenario as he pleases in order to build a tree of scenarios labelled Story Tree.\\\\
+subsurface also called a cross-section \cite{BalancedCrossSections}. It is a key problem for geologists when they want to understand how the terrain transformed to be in state it is today. Moreover restoring cross section allows them to date geological events such as faults, erosion or sedimentation. It is also a major source of interest for oil searchers who can identify places where oil is likely to be trapped in by looking at the cross section evolution. Tools to tackle this problem have already been created and can  be categorized into two kinds: geometrical based tools which deform the initial cross-section relying only on geometrical and kinematical property of the drawing and physical based ones which focus on runninng a simulation using physical equation applied to the section in order to deform it. However those tools usually restore only one scenario of the cross-section history when several of them can exist.\\\\
+ Here, we propose a new hybrid method which focuses on proposing multiple scenarios of the cross section restoration. As an input we take a cross section drawing containing topological data and we map a mass spring system on it, which is the center of our animation process. In addition we propose to the user to choose among possible events to transform the cross section to its restoration state and simulate the selected ones. Each time an event simulation ends, we ask the user to make another event choice until there are no event to propose left. One main feature of our methods is that the user is able to come back to its previous choices and create an other scenario as he pleases in order to build a tree of scenarios labelled as Story Tree.\\\\
 
 \chapter{Introduction}
-
-Hand-drawn sketches are highly used in geology for illustrating and validating hypotheses. It is the main way of keeping and showing geological data. Indeed, showing an image of what we have in mind is a really powerful way to convey our thoughts, especially here in geology where we can draw from multiple points of view (example). Futhermore geologists write many anotations on their drawing to give more hints and be more specific in the information they want to show in their sketches.\\\\
+\label{ch:intro}
+Hand-drawn sketches are highly used in geology for illustrating and validating hypotheses. It is the main way of keeping and showing geological data. Indeed, showing an image of what we have in mind is a really powerful way to convey our thoughts, especially here in geology where we can draw from multiple points of view (top view or side view in general). Futhermore geologists write many anotations on their drawing to give more hints and be more specific in the information they want to show in their sketches.\\\\
 For instance sketches can be used to reconstruct a 3D view of the subsurface by drawing a 2D top view of the current terrain \cite{brazil} and using anotations or to represent 2D vertical cross-sections. \\\\
-However anotations are limited in explaining what happened in the past, it is difficult to anotate the past of the geological representation on a single sketches. Therefore geologists must draw several sketches when they whant to show the history of a terrain. \\\\
-This is exaclty what they do when they want to do cross section restoration \cite{SectionRestoration}. It consists in drawing several sketches of the same cross section at different time steps starting from its current state. A cross section is composed of several geological elements, in particular blocks, layers and faults. The layers they draw correspond to different sedimentary layers that have deposited  along history. Blocks correspond to parts of the section which are between two faults or one fault and on boundary of the sketch. Finally faults correspond to breaks in the section and create discontinuities in it. They can be of three types:
+However anotations are limited in explaining what happened in the past, it is difficult to anotate the past of the geological representation on a single sketch. Therefore geologists must draw several sketches when they whant to show the history of a terrain. \\\\
+This is the case when they build cross section restoration \cite{SectionRestoration}. It consists in drawing several sketches of the same cross section at different time steps starting from its current state. A cross section is composed of several geological elements, in particular blocks, layers and faults. The layers they draw correspond to different sedimentary layers that have deposited  along history. Blocks correspond to parts of the section which are between two faults or one fault and on boundary of the sketch. They contain part of layers which have been cut by faults and are called geological unit (unit for short).
+Finally faults correspond to breaks in the section and create discontinuities in it. They can be of three types:
 Normal, Reverse or Strike-slip. Normal and Reverse faults correspond to vertically oriented breaks which make blocks slide among their left or right side. Normal faults happen during extension while reverse faults happen during compression. As for Strike-slip faults, their are horizontal breaks that make blocks sliding on their bottom or upper parts.\\
 However as we are in the 2D vertical case we are only interesed in the reverse and normal faults.\\\\
-Here is an exemple of a geological sketch: 
-%Chartreuse
+Figure ~\ref{geostruct} summerize the cross section structure and Figure ~\ref{crossxeg} show an example of a cross section.
+ \begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.3]{geologyStructEdit.png}
+	\caption{Cross section structure}
+	\label{geostruct}
+\end{figure}
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.8]{Wraped_Section.png}
 	\caption{Chartreuse Cross Section}
+	\label{crossxeg}
 \end{figure}
 
-The current state of the cross section is the result of several geological phenomena such as erosion, foldings, sedimentations, fault impacts, etc..., which occured in the past at different time. Consequently, restoring a cross section can differ depending on the geologist point of view.\\\\
-However using the initial sketch  and geometrical tools \cite{Move} geologists are able to draw the past state of the cross section before any erosion, fault and sediment events and this restoration is usually unique and doesn't differ much between geologist.An analysis of the different layers and faults usually lead to the same geometrical evolution reconstruction which has been provoqued by compression or extension of the rock masses before, after or during deposit and erosion of the sediments and basement rocks. \\\\
-The main problem geologist are facing in this restoration is to find (deduce) what really happened to go from the current state to the past one. They have two things to identify. First they have to find all the events that occured from the past to the current state. Then they have to find in with order they occured because it is possible that even when changing the event order we obtain the same restoration at the end. Futhermore it is possible to find the same restoration having identifying different events in two different hypothesis. \\\\
+The current state of the cross section is the result of several geological phenomena such as erosion, foldings, sedimentations, fault impacts, etc..., which occured in the past at different time. Consequently, restoring a cross section can differ depending on the geologists' point of view.\\\\
+However using the initial sketch  and geometrical tools like \cite{Move}, geologists are able to draw the past state of the cross section before any erosion, fault and sediment events. Thus they obtain a restoration which is usually unique and doesn't differ much between geologist. 
+Most of the time, an analysis of the different layers and faults usually lead to the same geometrical evolution reconstruction which has been provoqued by compression or extension of the rock masses before, after or during deposit and erosion of the sediments and basement rocks. \\\\
+Consequently the main problem geologist are facing in this restoration is to find what really happened between the current state to the past one. They have two main problems to solve. First they have to find all the events that occured from the past to the current state. Then they have to find they occurrence order because it is possible that by changing the event order we obtain the same restoration at the end. Futhermore it is possible to find the same restoration having identifying different events in two different hypothesis. \\\\
 Consequently geologists have to draw many sketches in order to expose their hypothesis. In addition those drawings are rather limited: on top of representing only one 2D cross-section of the terrain being investigated, they can only represent hypotheses on the underground geometry at discrete time steps, rather than a complete continuous history. Futhermore insuring consistency between these sketches over time heavily depends on available data, maturity of the regional geological interpretation and the skills of the geologist, i.e. his knowledge on the way rocks and sediments fold, on the way faults propagates and produce sliding and displacements, and on the way sediments are deposited or eroded, etc...\\\\
 Recently, it was proposed to organize geological sketches into story trees to present and compare different interpretations of the formation of a given terrain \cite{lidal} but the task remains labor-intensive, requiring the geologist to draw every sketch in the story tree. Moreover, even while being skillful and experienced, it is hardly impossible for a geologist to express a continuum of the deformation of a geological cross-section with available tools.
 In this internship, we would like to follow up on this line of research by proposing methods for inferring a geological story tree directly from one geological sketch, and presenting the resulting tree of possible geological stories as an animation.\\\\
 
 \chapter{State of the Art}\\
 
-Several solutions of very different kinds have been proposed to solve the problem of correctly exposing many restoration hypothesis without inconsistencies and without spending too much time creating them. We distinguish at least three types of methods: kinematic, physically-based and sketch-based ones.\\\\
-Geometrical solutions consist in assuring only geometrical consistancy when exposing the solution while mecanical ones consist in running a physical simulation over the past cross section and see if the animation created confirm the hypothesis.\\\\
-\section{Kinematic methods}
-\section{Phycally-based methods}
-\subsection{Forward physics simulation methods}
-\subsection{Backward physics simulation methods}
-\section{Sketch based methods}
+Several solutions of very different kinds have been proposed to solve the problem of correctly exposing many restoration hypothesis without inconsistencies and without spending too much time creating them. We distinguish three main types of methods: geometrically based, physically-based and sketch-based ones.\\\\
+Geometrical methods consist in assuring only geometric consistency when exposing the solution while mecanical ones consist in running a physical simulation over the past cross section and see if the animation created confirm the restoration process hypothesis. Finally sketch based methods , which are more recent, propose geologist to optimise the number of need sketch for obtaining a restoration by storing them in a story tree structure.\\\\
 
-\section{Geometrical solutions}
+\section{Geometrically-based methods}
 
-Like mentionned above Lidal \cite{lidal} proposed a solution using trees to organize their resoning. Starting from the initial drawing the geologist can draw several stories where each node of the tree conctains a new sketch. In addition it is possible to superimpose the previous drawing to the new one helping keeping geometrical consitancy and reducing conciderably the time spent for drawing. Futhermore as geologists use usually seismic recording to draw the starting drawing, having this recording in background really help them in being consitent.\\\\
- As a result with fewer sketches and less time spent in drawing, geologists (see eg) can express their ideas better than with traditionnal sketching. Futhermore this tool is really efficient when exploring different hypothesis  because at each node we can create another branch to explore a new possibility and thus they can either refined their animation or try different scenarios. \\\\
-However this solution doesn't necessarely keep the topological consistancy of drawing unless the geologist spend more time being carefull of having precise topological consistant drawings. This topological aspect can be important when validating hypothesis especially when they restore very old cross sections and the topology of the terrain underwent drastic changes(exemples?).\\\\\
-Recently VAC \cite{vac} and VGC \cite{vgc} proposed a solution to have space-time topological consistancy in 2D drawings. More precisely it propose a solution for inbetweening two drawings of the same model which underwent topological changes. The fondation of the technique is the data structure VGC which has been shown to model all possible incidence relations between vertices, edges and faces in 2D sketches. Then the VAC are used to describe all possible changes in the topology of a vector graphic complex over time(exemples?).\\\\\
-Other geometrical tools such as "move 2D" \cite{Move} are used  to produce the restoration. They use geometrical and geological properties of the drawing and apply kinematic algorithms to deform the different blocks and units. They take into account several geological phenomena such as compaction, erosion, sedimentation and folding in order the keep the geological consistancy while the user is restoring interactively the cross section. They also consider more specific effects such as thermal subsidence and isostasy to have finer results in the restoration. As a result they produce sequences like:
+Geometrically-based methods are usually interactive process where the user will restore the cross section by either flattening layers, moving blocks and removing or adding matter.
+Those methods are widelly used by geologists because they gives them a large control over the restoration process while keeping the geologic and geometric consistency of the section.  The deformation process is done by applying  kinematic algorithms on the different block and unit. Futhermore those methods are able to take into account a wide range of geological phenomena such as compaction, erosion, sedimentation, folding but also more specific effects such as thermal subsidence and isostasy (crust floating on the mantle) for finner restoration results. In addtion, the kinematic algorithm used in the restoration process produce real time rendering which is why these methods are able to be interactive.
+Figure ~\ref{mve} shows a portion of the geometric restoration process using the "Move 2D" tool \citep{Move}:
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=3]{mve2D.png}
 	\caption{MVE 2D restoration sequence}
+	\label{mve}
 \end{figure}
 
- In addition this kind of tool can be used for foward modeling which can help geologists to validate their hypothesis in the case they want to check if the restoration they produced can give the same result as today terrain situation. Futhermore they can consider the 3D aspect of a subsurface using several cross sections and a 3D model of the considered area.\\\\\
-  It is important to note that this kind of tool doesn't produce realisitc results in terms of physical aspect but they have fast computation time and let the user interact to build the restoration.\\\\\
-Here is an example of the chartreuse restoration using this kind of geometrical tools:
+In addition this kind of method can produce forward modeling animation which can help geologists to validate their hypothesis in the case they want to check if the restoration they produced matches the input cross section. Futhermore they can consider the 3D aspect of a subsurface using several cross sections and a 3D model of the considered area like shown in Figure ~\ref{mve3}.
 
-%Chartreuse
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.8]{Wraped_Section.png}
-	\caption{Chartreuse Cross Section}
+	\includegraphics[scale=1]{mve3D.png}
+	\caption{MVE 3D. 3D modeling using several 2D cross sections}
+	\label{mve3}
 \end{figure}
 
-%Chartreuse unWraped
+
+The main drawback of these methods is their lack of physical realism which can be noticable and inconvenient for some restoration.
+\section{Phycally-based methods}
+Phycally-based methods run mecanical simulations over cross sections and are fully automatic methods with very few interactions with the user. They are based on the Coulomb theory which describe how layers will react to contact and stress coming from  adjacent layers. Moreover it describes how a block will slide while being submitted to forces and stress. In addition the block breaking is caracterized by the Young Modulus parameter which give breaking condition of materials. \\
+As those methods are fully automatic they are easier to use and are handier for geologists.
+We can distinguish two types of physycally based methods: forward simulation and backward simulation ones.
+The two methods use finite elements methods to run their simulation but take a different approach of the restoration problem.
+\subsection{Forward physics simulation methods}
+Forward simulation methods propose to run the simulation over the restoration, which has been provided by arbitrary means, and see if it matches (not necessarily perfectly) the current cross section. They simulate folding forces and create fault where materials are supposed to break. Other geological events such as erosion, sedimentation or compaction are also taken into account. Figure ~\ref{slam} shows a simulation run with SLAMTec \cite{SLAMTec} which implement forward simulation:
+
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.6]{UnWraped_Section.png}
-	\caption{Chartreuse Restoration}
+	\includegraphics[scale=0.5]{slamtec.png}
+	\caption{Slamtec cross section modeling}
+	\label{slam}
 \end{figure}
+We can note that similar result can be obtained with OptumG2 \cite{Optum}
+\subsection{Backward physics simulation methods}
+Backward simulation methods propose the same kind of simulation than forward simulation but change the way the geological event occur. They propose to run a mecanical simulation on the starting cross section and apply opposite forces and conditions to event have been applied. For instance \\\\
+Even though physically based methods respect physic laws and produce very consistent results, they are not perfectly matching the cross section current state and the restoration.Thus they cannot fully validate the hypothetical section history they have simulated. In addition, depending on the physical model accuracy used in the simulation the computation time can take up to several hours.
+\section{Sketch based methods}
 
- Here it was done manually by a geologist who dealt with each block one by one and flattened each layer while conserving their respective height and area. After the flattening operation the user can manually stick the new block to its neighbours with the corresponding moduli facing each other.
+
+Like mentionned above Lidal \cite{lidal} proposed a solution using trees to organize their resoning. Starting from the initial drawing the geologist can draw several stories where each node of the tree conctains a new sketch. In addition it is possible to superimpose the previous drawing to the new one helping keeping geometrical consitancy and reducing conciderably the time spent for drawing. Futhermore as geologists use usually seismic recording to draw the starting drawing, having this recording in background really help them in being consitent.\\\\
+ As a result with fewer sketches and less time spent in drawing, geologists (see eg) can express their ideas better than with traditionnal sketching. Futhermore this tool is really efficient when exploring different hypothesis  because at each node we can create another branch to explore a new possibility and thus they can either refined their animation or try different scenarios. \\\\
+However this solution doesn't necessarely keep the topological consistancy of drawing unless the geologist spend more time being carefull of having precise topological consistant drawings. This topological aspect can be important when validating hypothesis especially when they restore very old cross sections and the topology of the terrain underwent drastic changes(exemples?).\\\\\
 
 \section{Physical solutions}
 
-In order to solve the cross-section restoration problem an other kind of solution tools has been explored which is physically based tools. While geometrical tools don't assure the physical consistancy of the restoration which can question the restoration inbetweening, physical based tools are by nature physically consistent.\\\\
- We can identify two kind of physically based tools: those which help validating complex structural model of 3D subsurface like LithoTect \cite{LithoTec} and those which run a simulation over simpler but physically coherent enough using finite element method with the Coulomb theory like SLAMTec and OptumG2.\\\\ 
-Software like LithoTect are very usefull because they allow geologist to build very consistent and complex model of a subsurface which implies that they can create very fine 2D cross section where they can run a physical simulation on it.\\\\
-Software like SLAMTec or OptumG2 run simulations over simpler models which are also physically consistent but the simulation will take less parameters and properties of the terrain, leading to faster computation time.\\
-Such tools can be used to validate a restoration. Indeed by running a simulation over the restoration geologist can see if what they produce seems coherent with the current state of the cross section even if those simulations can never produce the same result as this current state.\\\\
+
  This is one drawback of using those tool of forward simulation, even if we have a very fine representation of our model it can never achieve to retrieve a very similar correspondances and cannot validate by itself a restoration, geologists have to discuss the solution proposed.\\\\ 
  However some physically based tool try to  solve this problem by proposing a backward simulation. This simulation is not simulating the "real" inverse of what happened to the current cross section but they run a finite element simulation with opposite forces and condition to what the geologist think that happened. For instance if the current section has been subject to compression forces the tool will apply extension forces to the model, same thing with compaction and other phenomena.\\\\
  Here is an example of "Dynel 2D" \cite{Dynel} which implements this method:
@@ -193,28 +156,33 @@ That's why one of the main purpose of this master thesis is to explore and propo
 %
 Indeed, we can notice that most of the state-of-the-art tools provide only one scenario starting either from the restoration or the cross section current state. However there are many uncertainties encountered during the animation process mainly due to the geological events occurrence order.
 %
-\chapter{Our Solution}
+\chapter{Overview of our solution}
 
-In this thesis we contribute to solve the cross-section restoration problem by proposing a new method based on multiple scenarios exploration and animation. As state-of-the-art mehtods can never achieve to provide a scenario that perfectly match the cross-section current state and its restoration, we follow a line of research exploring the multiple scenario possibilities.
-Our method consist in un-doing geological events that occured on a starting cross section, simulating the most plausible un-do event orders and provide several restoration scenarios.\\\\
+In this thesis we contribute in the cross-section restoration field by proposing a new method based on multiple scenarios exploration and animation. Our method consist in un-doing geological event sequences that occured in a cross section and proposing several restoration scenarios.\\\\
 
-During the project, we were motivated by restoring the Charteuse cross-section which has been provided by geologists with its restoration. As geologists could validate each scenario animation we could simulate, we tried to provide as many plausible scenarios as possible to show the efficiency of our method.\\\\
-We wanted to provide backward simulations of several interactively created scenarios inbetweening the current Chartreuse section and its restoration. Those scenarios are encoded into a story tree similary to \cite{lidal} where a path corresponds to one animation of our inbeteweening and where each branch corresponds to the simulation of one or several events. The resulting story tree looks like Figure....
+Our approach works as follows: we first proceed to a sketch analysis where we detect most of the geological events that occured in the cross section and organise them into an Event Graph (see section ~\ref{sub:storytel}).
+Next we sort those events using time dependencies and probability of occurrence, and we start an interactive recursion where the geologist can choose events that need to be un-done. Then our system runs a backward simulation which attempts to undo the selected events. Afterwards the user can accept or backtrack the simulation and we continue this process until obtaining the desired restoration where no more events are to be un-done.
+Finally, when the geologist found his restoration sequence, he can play it in reverse to show a forward animation of the recovered cross section's history.
 
+During the project, we were motivated by restoring the Charteuse cross-section which has been provided by geologists with its restoration. As geologists can evaluate each scenario animation we can simulate, it is a good example for validating and showing the efficiency of our method.\\\\
+Thus we wanted to provide backward simulations of several interactively created scenarios inbetweening the current Chartreuse section and its restoration. Running this cross section in our interactive recursion creates several restoration scenarios which we encode into a story tree (see section ~\ref{sub:storytel}) similary to \cite{lidal}. Each path of the tree corresponds to one animation of our inbeteweening and each branch corresponds to the simulation of one or several events. The resulting story tree looks like Figure ~\ref{maingoal}
  \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.6]{mainGoal.png}
-	\caption{Cross Section Story Telling process}
-\end{figure}
+	\caption{Cross Section Story Telling process on Chartreuse section}
+	\label{maingoal}
+\end{figure}\\
 
-In addition of building interactively the cross section's story tree, our simulations use a real time animation model which is a combination of physically based and geometricaly based methods.
+
+In our example we can observe several geological events to un-do; we will list them in the following section.
+Then we will make an overview of our story telling process and of our animation model. Finally we will review our input data structure and our general workflow
 
 \section{Geological Events List}
 Here we present all the geological events we want to un-do in order to restore our cross-section.
 We listed at least four events to un-do: erosion, sedimentation, folding and faults. We show for each event an example of un-do.
 \subsection{Erosion}
 Inside a cross section, erosion impact can be noticed by thickness variation in the same layer.
-In many cases it digs cavities capatble of dividing units into two parts. Thus, in order to un-do this event we add the lacking matter to the concerned units as shown in Figure ~\ref{unerodeeg} and Figure \ref{unerodecveg}
+In many cases it digs cavities capable of dividing units into two parts. Thus, in order to un-do this event we add the lacking matter to the concerned units as shown in Figure ~\ref{unerodeeg} and Figure \ref{unerodecveg}
 
 \begin{figure}[htb]
 \centering
@@ -235,12 +203,11 @@ In many cases it digs cavities capatble of dividing units into two parts. Thus, 
 \end{tabular}
 \caption{Un-Erode example of filling a cavity which erased a unit.}
 \label{unerodecveg}
-\end{figure}
-
+\end{figure}\\\\
 The full explanation of the un-doing proccess is explained in section ....
 
 \subsection{Sedimentation}
-In geology, sediments are an importants assets for event datation because we know their age accurately. In addition, they always deposit in a horizontally regardless of the surface relief. Therefore it is a easy event to un-do because we just have to remove matter progressively and horizontally, the same way as Figure....
+In geology, sediments are an importants assets for event datation because we know their age accurately. In addition, they always deposit in horizontally regardless of the surface relief. Therefore it is a easy event to un-do because we just have to remove matter progressively and horizontally, the same way as Figure ~\ref{unsedeg}
 \begin{figure}[htb]
 \centering
 \begin{tabular}{@{}ccc@{}}
@@ -249,12 +216,13 @@ In geology, sediments are an importants assets for event datation because we kno
 \includegraphics[width=.35\textwidth]{unSedimentDescription2.png}\\
 \end{tabular}
 \caption{Un-Sediment layer example.}
-\end{figure}
-
+\label{unsedeg}
+\end{figure}\\\\
 The full explanation of the un-doing proccess is explained in section ....
 
 \subsection{Folding}
-Through history, cross sections are submitted to forces resulting either from tectonic movements, compression or extension, or some other kinds of geological events. Those forces impact cross sections by folding them and sometimes cause breaks inside it (see section ....). Here we are interested in the force process which only fold the cross section and which can be un-did by applying opposite forces to the one that have been applied like in Figure ~\ref{unfoldeg}
+\label{sub:fold}
+Through their history, cross sections are submitted to forces resulting either from tectonic movements, compression or extension, or some other kinds of geological events (volcanic activity for instance). Those forces impact cross sections by folding them and sometimes cause breaks inside it (see section ....). Here we are interested in the force process which only fold the cross section and which can be un-did by applying opposite forces to the one that have been applied like in Figure ~\ref{unfoldeg}
 
 \begin{figure}[htb]
 \centering
@@ -264,12 +232,11 @@ Through history, cross sections are submitted to forces resulting either from te
 \end{tabular}
 \caption{Un-Fold example.}
 \label{unfoldeg}
-\end{figure}
-
+\end{figure}\\\\
 The full explanation of the un-doing proccess is explained in section ....
 
 \subsection{Faults}
-Like mentionned in section ... faults are the results of forces applied to the cross section and causing breaks. When a break appear, it divides a block into two others with one sliding on the other. This is this process we want to inverse, by applying the correct opposit forces and sliding such as in Figure ~\ref{unfaulteg}
+Like mentionned in section ~\ref{sub:fold} faults are the results of forces applied to the cross section and causing breaks. When a break appear, it divides a block into two others with one sliding on the other. This is the process we want to inverse by applying the correct opposit forces and sliding such as in Figure ~\ref{unfaulteg}
 
 \begin{figure}[htb]
 \centering
@@ -279,54 +246,32 @@ Like mentionned in section ... faults are the results of forces applied to the c
 \end{tabular}
 \caption{Un-Fault example.}
 \label{unfaulteg}
-\end{figure} 
-
+\end{figure}\\\\
 The full explanation of the un-doing proccess is explained in section ....
 
 \section{Story Telling process}
-In order to offer an interactive process of creating plausible restoration scenarios we proposed a story telling method using two graphs. One being the Story Tree we already mentionned which allow the user to choose a list of events to simulate at each node among a list of possible events to simulate. A node correspond to a cross section situation back in time while a branch correspond to the choosen events simulation. Then it becomes possible to go back in the tree and chose other events to un-do and explore other scenarios.\\\\
-The other graph we use in our process is the Event Graph which contains all the identified events we can detect at time $t = 0$ when loading the section as well as their time dependency with each other. This graph is the base of our event proposition model for the Story Tree as it allow us to keep a time coherence in our restoration process. The Story Tree model is described in section ... and the Event Graph one in section ...
-\section{Animation and Validation process}
-The goal of this project was to provide an interactive method to build and visualise our different scenarios. Thus we needed simulation times which are near real time. We proposed a solution using mass-spring systems mapped on our cross-section and apply a Implicit Euler Scheme on it as well as external operators simulating our un-doing events. The computation times are real time regardless the event we simulate. The full animation system is described in section ~\ref{ch:animationmodel}.\\\\
-The validation prossess is mainly done visually but we give the user some hints about the success rate.
-Indeed as we mentionned in section ... sedimentation always occur horizontally at the surface. Because the last event to undo will be sedimentation we can give the user a deformation rate of the spring which tells him to what extend the layer is horizontal (see section ~\ref{sec:generalanimation}). We can give this indication to the user each time we wants to do an un-sedimentation.
-\section{Input Structure}
-In our geological case we encounter many different topological configurations in the cross-sections. Indeed as we mentionned in our introduction ... cross sections are composed of sedimentary layers, fault and blocks. Each block contains part of superimposed layer which are called geological units (units for short) and their side show discontinuities with its neighbouring block. Each layer is colored with a unique color representing the period it has deposited. Topologicaly speaking our cross-section is a convex graph composed of faces representing the units, which means that every face as at least one neighbour and there are no isolated group of faces. The discontinuities we find in the cross section are due to faults creation caused by extreme folding conditions. As a consequence we decided to use the VGC \cite{vgc} structure to encode our cross section as it can model all possible incidence relations between vertices, edges and faces in 2D sketches. We can notice than using such a structure allows us to extend our line of work in other field than geology.
+\label{sub:storytel}
+In order to offer an interactive process of creating plausible restoration scenarios we proposed a story telling method using two graphs. One being the Story Tree which allows the user to choose a list of events to simulate at each node among a list of possible events to simulate. A node correspond to a cross section situation back in time while a branch corresponds to the choosen events' simulation. Then, starting from an arbitrary node, it becomes possible to go back in the tree and chose other events to un-do for exploring other scenarios.\\\\
+The other graph we use in our process is the Event Graph which contains all the identified events we can detect at time $t = 0$, when loading the section, as well as their time dependency with each other. This graph is the base of our event proposition model for the Story Tree as it allow us to keep a time coherence in our restoration process. The Story Tree model is described in section ... and the Event Graph one in section ...
+\section{Animation}
+Because goal of this project was to provide an interactive method to build and visualise our different scenarios, we needed simulation times to be small, near real time.We propose an animation model which combines physically based and geometrically based methods. The main animation loop consist in using mass-spring systems mapped on our cross-section and apply a Implicit Euler Scheme on it. On the other hand we propose external operators simulating our un-doing events which use geometrical algorithms. The computation times are real time regardless the event we simulate. The full animation system is described in section ~\ref{ch:animationmodel}.\\\\
+After simulating un-do events the user can evaluate his choice visually and choose his next action. However our animation model allow us to give the user some hints about the success rate using deformation energy (see section ~\ref{sec:generalanimation}).
+%Indeed as we mentionned in section ... sedimentation always occur horizontally at the surface. Because the last event to undo will be sedimentation we can give the user a deformation rate of the spring which tells him to what extend the layer is horizontal . We can give this indication to the user each time we wants to do an un-sedimentation.
+\section{Input Data Structure}
+In our geological case we encounter many different topological configurations in the cross-sections. Indeed as we mentionned in our introduction ~\ref{ch:intro} cross sections are composed of sedimentary layers, fault and blocks. Each block contains part of superimposed layer which are called units and their side show discontinuities with its neighbouring block. Each layer is colored with a unique color representing the period it has deposited. Topologicaly speaking our cross-section is a convex graph composed of faces representing the units, which means that every face as at least one neighbour and there are no isolated group of faces. The discontinuities we find in the cross section are due to faults creation caused by extreme folding conditions. As a consequence we decided to use the VGC \cite{vgc} structure to encode our cross section as it can model all possible incidence relations between vertices, edges and faces in 2D sketches. We can notice than using such a structure allows us to extend our line of work in other field than geology.
 
 \section{General WorkFlow}
 
-Having presenting each part of our method process, we give now the general workflow which consists in 
-five steps:\\\\
+Here we present the general workflow  of our methods which consists in five steps:\\\\
 
-\indent 1) Import the input drawing and analyse it (chapter ...)\\
-\indent 2) Generate the Event Graph (chapter ...)\\
-\indent 3) Propose the user events to simulate using the Story Tree(chapter ...)\\
-\indent 4) Simulate the list of choosen events using our animation model (chapter ...)\\
-\indent 5) Either go back in the Story Tree, loop to step 3) or stop the process and save the animation in a VAC XML file\cite{vac} (chapter ...)\\\\
-In the rest of our presentation, we describe more preciselly each step of our method, then show our results and finally conclude about the potential and the future works of the method.
+\indent 1) Event Graph generation by analysis of the input (chapter ...)\\
+\indent 2) Story Tree recursive process of choosing events amoung a list of possible events to un-do\\
+\indent 3) Animation of the list of choosen events \\
+\indent 4) Either looping to the Story Tree process 2) or stoping the process and save the animation in a VAC XML file\cite{vac} (chapter ...)\\
+\indent 5) Reading the VAC in reverse to show the forward cross section history
+
+In the rest of our thesis, we describe more preciselly each step of our method. We first detail our story telling model with a complete description of the Event Graph and Story Tree processes. Then we detail our animation model  which include a main animation loop and external animation operator dealing with un-do event simulation. Afterwards we present our method implementation. Then show our results and finally conclude about the potential and the future works of the method. 
  
- 
- \\\\
-In our geological case we encounter lots of different topological configuration in the cross-sections. Indeed as we mentionned before our cross-section is composed of sedimentary layers, fault and blocks which are chunks of the section located between faults. Consequently each block contains part of superimposed layer which are called geological units (units for short) and their side show discontinuities with its neighbouring block. Each layer is colored with a unique color representing the period it has deposited. Topologicaly speaking our cross-section is a convex graph composed of faces representing the units, which means that every face as at least one neighbour and there are no isolated group of faces. The discontinuities we find in the cross section are due to faults creation caused by extreme folding conditions.\\\\
-%drawing
- \begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.3]{geologyStructEdit.png}
-	\caption{Cross section structure}
-\end{figure}
-
-Because of the cross section has a well defined topological representation and because it is changing over time we opted for using VAC and VGC structures which we allow us to keep a time-space topological consistency during the animation. The VGC data structure has the advantage of modeling all possible incidence relations between vertices, edges and faces in 2D sketches, therefore it is a good choice for us who want to produce a tool which can be applied to other situations outside the geological field. The VAC structure is used to animate the VGC and describe all possible changes in the topology of a VGC over time which is be a good solution to show our produced animation. As the VAC works with keyframing and inbetweening the keyframes we need to propose an inbetweening methods for our input model which will be part of our animation method.\\\\
-  Because we use VGC and VAC structures all the input cross section will be drawn using the vpaint software \cite{vpaint} which build a XML file as output. Then we will parse this XML file as the input of our tool.\\\\
-Regarding the story telling part we propose a method similar to Lidal \cite{lidal} using a story tree. Each node of the tree corresponds to a cross section state in the time (going backward) where we can choose to simulate several events amoung a list of possible event at this particular time and state when each branch corresponds to the animation of the simulated events.
-In our geological case we have to consider a set of events that impacted on the cross section we consider. In this master thesis we will consider the following ones: erosion, sedimentation, folding and faults. Thus because we are going backward in time we will try to undo thoses events and we will propose to the user either to un-erode, un-sediment, un-fold or un-fault the cross-section at a story tree node. \\\\
-When the user choose undo events we have to simulate its effect. In order to do so we will use a first approximation of terrain displacement. We will consider sedimentary layers to be plastic materials. Thus as a first approximation we will map mass spring systems to our drawing in order to animate it. We will use a implicit euler scheme as the main animation loop and apply external transformation if needed for un-doing an geological event.\\\\
-The validation can be done visually by the user but we also give him hints about the success rate. Indeed one important assumption that geologist often do is that the sedimention always occur with the upper bound of the new layer being horizontal. Because the last event to undo will be sedimentation we can give the user a deformation rate of the spring which will tell him to what extend the layer is horizontal (see continuous simulation). We can give this indication to the user each time we wants to do an un-sedimentation.\\\\
-Futhermore it is possible that by choosing one path in the tree, the user meets a dead end without getting to the restoration state. This means that chosen sequence was not plausible at some point and the user must go back to its choices.\\\\
-To summerize our general workflow is: first analysing the input vpaint drawing in order to extract all the geological structure we need to run our simulation on and propose plausible scenarios. Because we will need prior geological information for the simulation and to propose plausible events to the user, we ask the user to give some geological features of the cross section such as the layers' age, their deformation coefficient (Young Modulus ref), their friction coefficient and so on.\\ 
-After this step, we map mass spring system on the cross section and propose the first events to undo at the root of the story tree. 
-Then the user will choose progressively which events he wants to simulate and will build the tree of scenarios i.e. the story tree. At each step the user can go back to a previous node and decide to simulate other events that the ones he selected.
-Finally during the simulation we will save the animation as VAC in an output XML file in order to have a fluid animation.\\\\
-
 \chapter{Cross section analysis}
 
 As mentionned above our input drawing will be built using vpaint software which implements the VAC and VGC structures (refs).
@@ -763,11 +708,7 @@ In that case the segeents are parallel but non intersecting.\\\\
 3)  $ \overrightarrow{RS} \wedge \overrightarrow{PQ} \neq 0$.
 The segment are intersecting iff the computation of $t$ and $u$ gives $t,u \in [0,1]$\\\\
 4) Otherwise the segements are not parallel and non intersecting\\\\
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.5]{slamtec.png}
-	\caption{Slamtec cross section modeling}
-\end{figure}
+
 
 
 \bibliography{pfe.bib}
