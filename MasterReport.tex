@@ -43,13 +43,15 @@
 \begin{document}
 \selectlanguage{english}
 
-\tableofcontents
 
-\chapter{Abstract}
+
+\chapter*{Abstract}
 
 This thesis addresses the problem of restoring the complete history of a 2D geological 
 subsurface also called a cross-section \cite{BalancedCrossSections}. It is a key problem for geologists when they want to understand how the terrain transformed to be in state it is today. Moreover restoring cross section allows them to date geological events such as faults, erosion or sedimentation. It is also a major source of interest for oil searchers who can identify places where oil is likely to be trapped in by looking at the cross section evolution. Tools to tackle this problem have already been created and can  be categorized into two kinds: geometrical based tools which deform the initial cross-section relying only on geometrical and kinematical property of the drawing and physical based ones which focus on runninng a simulation using physical equation applied to the section in order to deform it. However those tools usually restore only one scenario of the cross-section history when several of them can exist.\\\\
  Here, we propose a new hybrid method which focuses on proposing multiple scenarios of the cross section restoration. As an input we take a cross section drawing containing topological data and we map a mass spring system on it, which is the center of our animation process. In addition we propose to the user to choose among possible events to transform the cross section to its restoration state and simulate the selected ones. Each time an event simulation ends, we ask the user to make another event choice until there are no event to propose left. One main feature of our methods is that the user is able to come back to its previous choices and create an other scenario as he pleases in order to build a tree of scenarios labelled as Story Tree.\\\\
+
+\tableofcontents
 
 \chapter{Introduction}
 \label{ch:intro}
@@ -75,7 +77,7 @@ Figure ~\ref{geostruct} summerize the cross section structure and Figure ~\ref{c
 	\label{crossxeg}
 \end{figure}
 
-The current state of the cross section is the result of several geological phenomena such as erosion, foldings, sedimentations, fault impacts, etc..., which occured in the past at different time. Consequently, restoring a cross section can differ depending on the geologists' point of view.\\\\
+The current state of the cross section is the result of several geological phenomena such as erosion, foldings, sedimentations, or fault impacts, which occured in the past at different time. Consequently, restoring a cross section can differ depending on the geologists' point of view.\\\\
 However using the initial sketch  and geometrical tools like \cite{Move}, geologists are able to draw the past state of the cross section before any erosion, fault and sediment events. Thus they obtain a restoration which is usually unique and doesn't differ much between geologist. 
 Most of the time, an analysis of the different layers and faults usually lead to the same geometrical evolution reconstruction which has been provoqued by compression or extension of the rock masses before, after or during deposit and erosion of the sediments and basement rocks. \\\\
 Consequently the main problem geologist are facing in this restoration is to find what really happened between the current state to the past one. They have two main problems to solve. First they have to find all the events that occured from the past to the current state. Then they have to find they occurrence order because it is possible that by changing the event order we obtain the same restoration at the end. Futhermore it is possible to find the same restoration having identifying different events in two different hypothesis. \\\\
@@ -113,12 +115,12 @@ In addition this kind of method can produce forward modeling animation which can
 
 The main drawback of these methods is their lack of physical realism which can be noticable and inconvenient for some restoration.
 \section{Phycally-based methods}
-Phycally-based methods run mecanical simulations over cross sections and are fully automatic methods with very few interactions with the user. They are based on the Coulomb theory which describe how layers will react to contact and stress coming from  adjacent layers. Moreover it describes how a block will slide while being submitted to forces and stress. In addition the block breaking is caracterized by the Young Modulus parameter which give breaking condition of materials. \\
-As those methods are fully automatic they are easier to use and are handier for geologists.
+Phycally-based methods run mecanical simulations over cross sections to animate them. Most oft the time they are fully automatic methods with very few interactions with the user. They are based on the Coulomb theory which describe how layers will react to contact and stress coming from  adjacent layers. Moreover it describes how a block will slide while being submitted to forces and stress. In addition they also use a material deforming and breaking method caracterized by the Young Modulus parameter which give breaking condition of materials. \\
+As those methods are fully automatic, they are easier to use and are handier for geologists.
 We can distinguish two types of physycally based methods: forward simulation and backward simulation ones.
 The two methods use finite elements methods to run their simulation but take a different approach of the restoration problem.
 \subsection{Forward physics simulation methods}
-Forward simulation methods propose to run the simulation over the restoration, which has been provided by arbitrary means, and see if it matches (not necessarily perfectly) the current cross section. They simulate folding forces and create fault where materials are supposed to break. Other geological events such as erosion, sedimentation or compaction are also taken into account. Figure ~\ref{slam} shows a simulation run with SLAMTec \cite{SLAMTec} which implement forward simulation:
+Forward simulation methods propose to run the simulation over the restoration, which has been provided by any arbitrary means, and see if it matches (not necessarily perfectly) the current cross section. They simulate folding forces and create fault where materials are supposed to break. Other geological events such as erosion, sedimentation or compaction are also taken into account. Figure ~\ref{slam} shows a simulation run with SLAMTec \cite{SLAMTec} which implement forward simulation:
 
 \begin{figure}[H]
 	\centering
@@ -126,36 +128,40 @@ Forward simulation methods propose to run the simulation over the restoration, w
 	\caption{Slamtec cross section modeling}
 	\label{slam}
 \end{figure}
-We can note that similar result can be obtained with OptumG2 \cite{Optum}
+We can note that similar result can be obtained with other forward simulator such as OptumG2 \cite{Optum}
 \subsection{Backward physics simulation methods}
-Backward simulation methods propose the same kind of simulation than forward simulation but change the way the geological event occur. They propose to run a mecanical simulation on the starting cross section and apply opposite forces and conditions to event have been applied. For instance \\\\
-Even though physically based methods respect physic laws and produce very consistent results, they are not perfectly matching the cross section current state and the restoration.Thus they cannot fully validate the hypothetical section history they have simulated. In addition, depending on the physical model accuracy used in the simulation the computation time can take up to several hours.
-\section{Sketch based methods}
-
-
-Like mentionned above Lidal \cite{lidal} proposed a solution using trees to organize their resoning. Starting from the initial drawing the geologist can draw several stories where each node of the tree conctains a new sketch. In addition it is possible to superimpose the previous drawing to the new one helping keeping geometrical consitancy and reducing conciderably the time spent for drawing. Futhermore as geologists use usually seismic recording to draw the starting drawing, having this recording in background really help them in being consitent.\\\\
- As a result with fewer sketches and less time spent in drawing, geologists (see eg) can express their ideas better than with traditionnal sketching. Futhermore this tool is really efficient when exploring different hypothesis  because at each node we can create another branch to explore a new possibility and thus they can either refined their animation or try different scenarios. \\\\
-However this solution doesn't necessarely keep the topological consistancy of drawing unless the geologist spend more time being carefull of having precise topological consistant drawings. This topological aspect can be important when validating hypothesis especially when they restore very old cross sections and the topology of the terrain underwent drastic changes(exemples?).\\\\\
-
-\section{Physical solutions}
-
-
- This is one drawback of using those tool of forward simulation, even if we have a very fine representation of our model it can never achieve to retrieve a very similar correspondances and cannot validate by itself a restoration, geologists have to discuss the solution proposed.\\\\ 
- However some physically based tool try to  solve this problem by proposing a backward simulation. This simulation is not simulating the "real" inverse of what happened to the current cross section but they run a finite element simulation with opposite forces and condition to what the geologist think that happened. For instance if the current section has been subject to compression forces the tool will apply extension forces to the model, same thing with compaction and other phenomena.\\\\
- Here is an example of "Dynel 2D" \cite{Dynel} which implements this method:
+Backward simulation methods propose the same kind of simulation than forward simulation but change the way the geological events occur. They propose to run a mecanical simulation on the starting cross section and apply forces and conditions opposed to the true event impacts that have been applied. For instance if the current section has been subject to compression forces the method will apply extension forces to the model instead. The same process is repeated for un-doing other types of geological events\\\\
+ Figure ~\ref{dyn2} shows a restoration example simulated with "Dynel 2D" \cite{Dynel} which implements this method:
  \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.5]{dynel2D.png}
+	\includegraphics[scale=0.6]{dynel2D.png}
 	\caption{Dynel 2D restoration sequence}
+	\label{dyn2}
 \end{figure}
- 
- While this method is likelly to produce much better results in terms of similarity with the restoration and the current state of the section, it is more difficult to use because there exist many uncertainties on identifying the events that occured between the current cross section and the restoration as there are several possible scenarios. \\\\\
-Even though those physically based tool respect physic laws and produce very consistent results, they are not fully matching the cross section current state and thus cannot validate the hypothetical section history they have simulated. In addition this kind of tool doesn't explore several scenarios and are restrained to a single or very few cases. 
-That's why one of the main purpose of this master thesis is to explore and propose several plausible scenarios.
 
-%
-Indeed, we can notice that most of the state-of-the-art tools provide only one scenario starting either from the restoration or the cross section current state. However there are many uncertainties encountered during the animation process mainly due to the geological events occurrence order.
-%
+ While this method is likelly to produce much better results that forward method in terms of similarity with the restoration and the current state of the section, it is more difficult to use because there exist many uncertainties on identifying the events that occured between the two states.
+
+
+Even though physically based methods respect physic laws and produce very consistent results, they are not perfectly matching the cross section current state and the restoration. Thus they cannot fully validate the hypothetical section history they have simulated. In addition, depending on the physical model accuracy used in the simulation, the computation time can take up to several hours.
+
+\section{Sketch based methods}
+
+Stetch based methods , which are more recent, try to bring back the traditionnal way of restoring cross section by organising geologist drawings into trees.
+Like mentionned in the introduction, Lidal \cite{lidal} proposed a solution using story trees to organize geologists' reasoning. Starting from the initial drawing (and node of the tree), the geologist can draw several stories where each node of the tree conctains a new sketch. In addition it is possible to superimpose the previous drawings to the new one, helping keeping geometrical consitancy and reducing conciderably the time spent for creating a sequence. Futhermore as geologists use mainly seismic recordings to draw their starting sketch, the method allow them to display this inital recording in background, helping them in being more conherent.\\\\
+ As a result with fewer sketches and less time spent drawing, geologists can express their ideas better than with traditionnal sketching. Futhermore this method is really efficient when exploring different hypothesis  because at each node geogist can create another branch to explore a new possibility for either refining their animation or trying different scenarios. Figure ~\ref{lidal} shows an example of Lidal methods:\\\\
+ \begin{figure}[htb]
+\centering
+\begin{tabular}{@{}cc@{}}
+\includegraphics[width=.35\textwidth]{lidal0.png}&
+\includegraphics[width=.35\textwidth]{lidal1.png}\\
+\end{tabular}
+\caption{Lidal sketch based method example.}
+\label{lidal}
+\label{unerodeeg}
+\end{figure}
+However this method doesn't necessarely keep the topological conherence of the drawings unless the geologist spend more time being carefull of maintaining it through their sequence. This topological aspect should not be ignored be cause it can refut hypotheses when dealing with very old cross sections where the terrain's topology underwent drastic changes.\\\\\
+
+In our project, we propose an hybrid method combining features of the three kinds of methods we just reviewed.
 \chapter{Overview of our solution}
 
 In this thesis we contribute in the cross-section restoration field by proposing a new method based on multiple scenarios exploration and animation. Our method consist in un-doing geological event sequences that occured in a cross section and proposing several restoration scenarios.\\\\
@@ -251,10 +257,10 @@ The full explanation of the un-doing proccess is explained in section ....
 
 \section{Story Telling process}
 \label{sub:storytel}
-In order to offer an interactive process of creating plausible restoration scenarios we proposed a story telling method using two graphs. One being the Story Tree which allows the user to choose a list of events to simulate at each node among a list of possible events to simulate. A node correspond to a cross section situation back in time while a branch corresponds to the choosen events' simulation. Then, starting from an arbitrary node, it becomes possible to go back in the tree and chose other events to un-do for exploring other scenarios.\\\\
+In order to offer an interactive process of creating plausible restoration scenarios, we proposed a story telling method using two graphs. One being the Story Tree which allows the user to choose a list of events to simulate at each node among a list of possible events to simulate. A node correspond to a cross section situation back in time while a branch corresponds to the choosen events' simulation. Then, starting from an arbitrary node, it becomes possible to go back in the tree and chose other events to un-do for exploring other scenarios.\\\\
 The other graph we use in our process is the Event Graph which contains all the identified events we can detect at time $t = 0$, when loading the section, as well as their time dependency with each other. This graph is the base of our event proposition model for the Story Tree as it allow us to keep a time coherence in our restoration process. The Story Tree model is described in section ... and the Event Graph one in section ...
-\section{Animation}
-Because goal of this project was to provide an interactive method to build and visualise our different scenarios, we needed simulation times to be small, near real time.We propose an animation model which combines physically based and geometrically based methods. The main animation loop consist in using mass-spring systems mapped on our cross-section and apply a Implicit Euler Scheme on it. On the other hand we propose external operators simulating our un-doing events which use geometrical algorithms. The computation times are real time regardless the event we simulate. The full animation system is described in section ~\ref{ch:animationmodel}.\\\\
+\section{Animation model}
+Because the goal of this project was to provide an interactive method to build and visualise our different scenarios, we needed simulation times to be small, near real time.We propose an animation model which combines physically based and geometrically based methods. The main animation loop consist in using mass-spring systems mapped on our cross-section and apply a Implicit Euler Scheme on it. On the other hand we propose external operators simulating our un-doing events which use geometrical algorithms. The computation times are real time regardless the event we simulate. The full animation system is described in section ~\ref{ch:animationmodel}.\\\\
 After simulating un-do events the user can evaluate his choice visually and choose his next action. However our animation model allow us to give the user some hints about the success rate using deformation energy (see section ~\ref{sec:generalanimation}).
 %Indeed as we mentionned in section ... sedimentation always occur horizontally at the surface. Because the last event to undo will be sedimentation we can give the user a deformation rate of the spring which tells him to what extend the layer is horizontal . We can give this indication to the user each time we wants to do an un-sedimentation.
 \section{Input Data Structure}
@@ -271,47 +277,85 @@ Here we present the general workflow  of our methods which consists in five step
 \indent 5) Reading the VAC in reverse to show the forward cross section history
 
 In the rest of our thesis, we describe more preciselly each step of our method. We first detail our story telling model with a complete description of the Event Graph and Story Tree processes. Then we detail our animation model  which include a main animation loop and external animation operator dealing with un-do event simulation. Afterwards we present our method implementation. Then show our results and finally conclude about the potential and the future works of the method. 
+
+\chapter{Story teling}
+
+In this chapter we present our story telling process which consist in detecting and ranking geological events and propose, in a recursive process, to user to choose events to un-do until he reaches the desired restoration.
+We will first present our Event Graph data structure which store and rank the detected events. Then we will describe our Story Tree data structure which includes the event proposition recursion.
+
+\section{Event Graph Generation: Scheduling and ranking Events}
+
+As the main goal of our method is to propose recursively events to un-do and simulate them, we need a mean to propose the right list of possible event at each step. This is done by our Event Graph structure which rank geological events regarding their time dependency with each other and their probability of occurence.
+
+When loading the input cross section, we are able to identify events to undo and create time dependencies between them just by looking at tgeological and geometrical properties of the section. Indeed they are obvious time relations we can deduce just by looking at sediments' ages. For instance we can sort the un-sediment events by looking at them. The youngest sediment will be the first one the user will un-sediment and the oldest will be the last. It is also obvious that un-erode events of one material must occur before its un-sedimentation. 
+We can go further try to build less obvious time dependencies which uses topological properties. This is the case of un-fault event time dependencies. By checking their topology, we can determine if there are units of adjacent blocks which are already stuck together. Indeed a fault always shifts a matching unit (of the same material) by a offset when it is in activity. Thus if we find already stuck units along the fault we can deduce that the fault stopped its activity before the sedimentation of those unit's materials. Figure ~\ref{faultstick} Shows an example of this situation:\\\\
+%example
+	\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{unFaultSedDescription.png}
+	\caption{Fault which ended before the sedimentation of the youngest orange layer. Here the orange layer is composed only of one unit (or two already stuck ones) whereas the others are composed of two non sticking units.}
+	\label{faultstick}
+	\end{figure}
+	
+After having build the time dependencies between events we store them in the Event Graph as follows:
+one event will be stored as a node of the graph while a time depency will be stored as an oriented edge. An edge points to an other event which occured before (in the forward time way) the pointing event. If we take the example of two un-sediment events of one young material and one older than previous, the young un-sediment event will points towards the older un-sediment event like shown on Figure ~\ref{eventGraph} which is the event graph of Figure ~\ref{faultstick}:
+
+	\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{eventGraph.png}
+	\caption{ Event Graph of Figure ~\ref{faultstick} which is composed of four un-sediment events and one un-fault event.}
+	\label{eventGraph}
+	\end{figure}
+
+Thus the Event Graph contains possible un-doing events with time dependencies and will play the main role in the event propositon process in section .... However, as too many event propositions will come out this process (20 events to un-do at each step in the Chartreuse example), we decided to grant our Event Graph an additionnal way of ranking events; we will concider events' probability of occurence. In addition of containing an event, an Event Node will also contain an evaluation function which gives the probability of an event to occur at time $t$. This ranking will allow us to cut branches in the Story Tree and avoid unplausible scenarios exploration see section ...
+.
+
+Here are some example of evaluation function we used:
+
+ - Un-fault (see section ...): We compute the side length of each of the two blocks' units which are in contact at the fault. The smaller the sum of the differences of each same material unit side length is the greater is the probability for the un-fault event to occur. It is justified by the fact that when a fault is closing it is done almost instantly with all the matching units facing each other\\\\
  
-\chapter{Cross section analysis}
+ - Un-eroding a concavity (see section ...): the wider the concavity is the greater the probability of occurrence is for this event. It is justified by the fact that keeping units having the same thickness on all their length is important to go back in time because at the restoration time they have the same thickness every where for the same material. Thus big eroded part must be the first ones to un-erode in order to assure the success of the simulation.\\\\
 
-As mentionned above our input drawing will be built using vpaint software which implements the VAC and VGC structures (refs).
-More preciselly we will use a VGC as input which is composed of vertices, edges and faces. This choice is justified by the fact that VGC can model all possible incidence relations between faces in 2D sketches and our cross-section is composed only of adjacent faces. An interesting feature of these structures is that each instance has a unique identifier and color which will allow us to build our geological structure.\\\\
-Here is an exemple of an input cross section using vpaint:
-%chartreuse section
+In the following section we will describe the Story Tree recursive process for proposing un-events which uses the Event Graph we build when loading the input drawing.
 
- \begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.5]{chartreusevpaint.png}
-	\caption{Chartreuse section drawn with VPaint}
-\end{figure}
+\section{Story Tree process: Proposing events and create scenarios} 
 
-We will use the precendently described geological structure as our intern cross section data structure. In other words a drawing will be represented as a cross section which will be composed of blocks themselves composed of units. Because we consider that at the restoration state all units are straight rectangles, we decompose our units into two sides (left and right) and two level boundaries (upper and bottom) which either make the links between unit or constitute the limits of the drawing. 
-%drawing
+In this section we describe our event proposing recursion which will allow the user to build different restoration scenarios which is the hearth of our contribution.
 
- \begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.3]{unitDescriptionEdit.png}
-	\caption{Geological unit representation}
-\end{figure}
+This recursion process starts after building the Event Graph we just described and which contains the geological events to un-do with their time dependencies. The process works as follows: at each recursive step (time $t$) we propose a list of un-do events to the user provided by the Event Graph which select events not constrained by time dependencies at time $t$. Furthermore, as we mentionned in the previous section less palusible events will not be proposed and the system will encourage the user to un-do event with the largest probability first. This way we proceed to a branch and bound method for our scenario exploration. \\\\
+In addition some events are not stored in the Event Graph and are only detectable at a given step $t$. For instance un-eroding concave parts (see section ... ) is only detectable at a given moment because concavities can appear and disappear while the whole terrain is deforming when un-doing other events. As a consequence, at each time step where an un-do event ends we have to detect this kind of event and propose it to the user. We will call this kind of event Dynamic event as they are only proposed at a given recursive step. In addition events such as un-Fold (see section ...) are not always detectable and must be provided user. That is why he has the opportunity to add its own Dynamic events when choosing among the list of possible events. Those events will be denominated as User Events.\\\\
+To summerize, the list of proposed event at step $t$ is composed of events selected from the Event Grah, dynamic events only un-doable at this step $t$ and user events added bt the geologist. The final step for compelting our proposition list is to remove events which don't fulfill their starting precondition which is necessary to simulate them (see section ...).\\\\
+Having this list of proposed events, the user can choose several events to un-doamong and simulate them. Afterwards he will wait for the simulation to end and will have three choices: loop to the recursive event proposing step and continue exploring one scenario, backtrack his action and explore new ones or end the process when obtaining the desired restoration scenario where there are no more events to undo.\\\\
 
-Thus we must deduce those structure from the input vpaint file. \\\\\
-To do so we use the colors of our edges and faces. When importing the drawing we first ask to the user to give the different time period for each material exisiting in the cross section. Then we will build our blocks by adding succefully all the unit of each layer starting the youngest ones to the oldest. We do this sort in order to simplify the block creation and minimize the number of block created during this phase. Moreover when adding a new unit we try to find one already added unit which share either one portion of its upper bound  or its bottom bound with it. If we can't find one matching unit we place it in a new block. If we find one or several sharing units we deduce that they are all part of the same block so we store them in one unique block. If we do the sort like previously enonced we will thus reduce the number of block created because the only cases where we create blocks are either when the newly added unit is a surface unit or is unit located in a different block than the previously added ones.\\\\
+This recursive process will be encoded in a Story Tree where each node contains the the list of event we can simulate at time $t$ and an edge represents the events simulated between two nodes. By encoding our process with this structure the user can explore as many restoration scenarios as he wants by following paths in the tree.
 
-When we have all our blocks created in our internal stucture we can identify the fault by looking at the color of the edges. If it is different than black or wite then it correspond to a fault which are caractarised by they color. The units are caracterized by their face color and their upper and bottom bounds which are drawn in white for most of them. Cross section border are usually drawn in black but we can deduce automatically which edge belongs to the lacking bound (limitation it is not always good).\\\\
+Figure shows an example of a Story Graph generated on the example of Figure ~\ref{strorygraph} :
+%example story graph
 
-We then have all the different material age, the blocks and units objects and the different fault we can find in the drawing. We will store all these information into a configuaration file .geo which will allow the user to save time by not giving the material information each times he opens the file. We have to note that in the input XML file, faces have an arbitrary cycling orientation which can be clockwise or counterclockwise. That's why but for building and manipulating our structure more easelly we will choose the convention that all our units will be first read clockwiselly. Thus we reverse the faces which are written counterclockwisely\\\\
+\begin{figure}[htb]
+\centering
+\begin{tabular}{@{}cc@{}}
+\includegraphics[width=.35\textwidth]{storyGraph.png}&
+\includegraphics[width=.35\textwidth]{chartreusedroite.png}\\
+\end{tabular}
+\caption{Story Graph of a portion of Chartreuse cross section. Colored circles correspond to the un-sediment event of a given layer while rounded squares correspond to the only un-fault event present in this cross section}
+\label{strorygraph}
+\end{figure}\\\\
+
+We presented our structure to creating interactively multiple restoration scenarios when several of them actually exist. In the next section we will present our animation model which will simulate the events we un-do during our recursive process.\\\\
 
 \chapter{Animation Model}
-\label{ch:animationmodel}
-Here we will present our first method to tackle the problem of proposing a panel of plausible animations giving geological restoration as final state from a 2D input slice. 
-The main idea of our methods is to map a mass spring system on each block of the cross section applying an implicit euler scheme solving the Newton's second law while possibly freezing the physic of several blocks at each time step regarding the undoing geological event. The output of our method we will a series of inbetween VGC encoded in a VAC which will be played on VPaint.\\\\
-After drawing our section in VPaint we will read the XML output file in our tool  and add all the necessary information needed by the simulation as the layers' materials one containing in particular their deformation and friction coefficients. This information will allow us to run the animation over our section.\\
+In this chapter we will present our animation model which is composed of a main animation loop using mass spring system, deforming and moving our blocks and units, and of event simulation operators which apply additionnal operations in our section in order to un-do events.The output of our method we will a series of inbetween VGC encoded in a VAC which will be played on VPaint sofware \cite{vpaint} as it let the user choose the animation framerate.\\\\
 \section{General animation loop}
 \label{sec:generalanimation}
-Like mentionned above the animation will be done by mapping a mass-spring system on each block. In fact it is more accurate to say that mass-spring system are mapped on layers instead of blocks. We proceed this way to take into account each layer orientation in the mapping as it is mapped according to layer's borders gradients. Considering that each layer is a rectangle that underwent some deformations the mapping will be done following the steps:	\\\\		
+Here we will present our main animation method which is base of our cross section restoration simulation. 
+The main idea of our method is to map a mass spring system on each block of the cross section and apply an implicit euler scheme solving the Newton's second law while possibly freezing the physic of several blocks at each time step regardless the undoing geological event. 
+Our simulation is parametrized by information provided by the user (see section ...) such as deformation layer's deformation coefficient (Young Modulus) and friction coefficient (used in the Coulomb theory)
+
+Like mentionned above the animation will be done by mapping a mass-spring system on each block.To be more accurate the systems are mapped on each units of each block. We proceed this way to take into account each unit orientation in the mapping as it is mapped according to unit's borders gradients. Considering that each unit is a rectangle that underwent some deformations the mapping will be done following the steps:	\\\\		
 \indent	- First we have to put the masses both at the layer border but also inside it.\\\\
 \indent	- We put the masses on the borders in an uniform way.\\\\
-\indent	- We put the masses inside the layer: to do so we have two solutions:\\\\
+\indent	- We put the masses inside the unit: to do so we have two solutions:\\\\
 \indent \indent	- Compute Hermite curve between each pair mass of the two level bounds and place particles uniformly on those curves.\\\\
 \indent \indent	- Compute the intersections between the previous Hermite curves and the one coming from each pair mass of the two sides and place particles at those intersections.\\\\
 	Even if the second solution might show better results that the first one we have chance that the curve comming from the sides might be not inside the layer due to big deformation making the layer non convex. \\With the first solution this problem is unlikely to occur because of the type of the deformations. In either case the Hermite curves be created using a mass pair and the gradient of the broder at each extremity as tangents. This way the layer will tend to transform back to a rectangle shape.\\\\
@@ -409,7 +453,7 @@ Finally we can add a optionnal inverse dynamic step at the end of the scheme loo
 Computing a mass spring system can take some time (few seconds for big systems) and can be noticable especially during block fusion but that is not a problem because the goal of the project is to record at each time step the result of our simulation as an inbetween VAC which can be played fluently.\\\\
 
 \section{Geological Events Simulation}
-
+In order to simulate an event, it has to fulfill preconditions which are required for the simulation and to ensure geological consistancy. Then when an event is simulated it has also post conditions to fulfill in order to transform the cross section into the state it was before this event. With this convention, simulating an event is equivalent into inbetweening the section from the precondition to the postcondition state. Furthermore all the simulated events evolve in the same time line having a duration which can be set by the user depending on the event.\\\\
 \chapter{Dealing With Discrete Geological Events}\\
 
 As we mentionned earlier, geologists are usually able to restore the history of cross sections by using several geometrical and simulation tools. However they only get one sequence leading to the final state of the section which represents its the state before any techtonic movement. Here we are interested in what happened between today's section state and the restoration. Indeed most of the time, when restoring sections; there are several scenarios that lead the initial state to the restoration, that is why geolists often question others' hypothesis. This is exactly one of the main thread of this project. We want to explore the most plausibles scenarios and see the resulting animation of exploration.\\\\
@@ -419,7 +463,7 @@ In order to encode our events in a intuitive manner we will use a story tree. Ho
 
 The Story graph represents the different event sequences we can run the simulation on. A node represents the list of event we can simulate at time $t$ and an edge represents the events simulated between two nodes. The Event Graph is used in the creation of this Story Graph be cause it will be taken into account when proposing at time $t$ the list of possible event to simulate. As a result user will explore this graph as a tree and will be able to see the animation of as many scenarios as he wants to see.\\\\
 
-Here is an example of Story Graph generated on a simple example:
+Figure ... shows an example of Story Graph generated on a simple example:
 %example story graph
 
 
@@ -607,28 +651,36 @@ We can now detail the un-fault event.\\\\
 \textbf{Postcondition:} all the sticking events ended meaning that all matching units merged together one new unit. That implies that the two concerned blocks merged.\\\\
 \textbf{Postcomputation:} regenerate the mass-spring system of the containing block at the end of the event for a better mesh uniformity.\\\\ 
 	
-\chapter{Scheduling and Proposing Events}
 
-We presented how the different events are simulated and how the user can choose different scenarios. We will now present the way of proposing the possible events using the Event Graph and some other techniques in order to give the user the means for restoring the cross section.\\\\
+\chapter{Cross section analysis}
 
-When loading the vpaint cross section we are able to identify events to undo  and create time dependencies between them just by looking at the geological and geometrical properties of the section. For instance we can sort the un-sediment events by looking at the material ages, the youngest sediment will be the first one the user will un-sediment and the oldest will be the last. We can go further and look at erosion and faults. It is obvious that un-erode events of one material must occur before its un-sedimentation. As for faults, we can look at them and see if there are units of blocks which are already stick together. Indeed a fault always shifts a matching unit (of the same material) by a offset when it is playing. However if the fault stop playing and if the sedimentation continue we will have already stuck units from both sides of the fault just like this example:\\\\
-%example
+As mentionned above our input drawing will be built using vpaint software which implements the VAC and VGC structures (refs).
+More preciselly we will use a VGC as input which is composed of vertices, edges and faces. This choice is justified by the fact that VGC can model all possible incidence relations between faces in 2D sketches and our cross-section is composed only of adjacent faces. An interesting feature of these structures is that each instance has a unique identifier and color which will allow us to build our geological structure.\\\\
+Here is an exemple of an input cross section using vpaint:
+%chartreuse section
 
-Thus we can conclude that the fault occured before the new sedimentation and record it in the Event Graph.\\\\
+ \begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{chartreusevpaint.png}
+	\caption{Chartreuse section drawn with VPaint}
+\end{figure}
 
-Here is an example of an event graph for a simple example:\\\\
+We will use the precendently described geological structure as our intern cross section data structure. In other words a drawing will be represented as a cross section which will be composed of blocks themselves composed of units. Because we consider that at the restoration state all units are straight rectangles, we decompose our units into two sides (left and right) and two level boundaries (upper and bottom) which either make the links between unit or constitute the limits of the drawing. 
+%drawing
 
-However, while it is possible to identify events beforehand, some others are only detectable at a given moment $t$. For instance un-eroding concave part is only detectable at a given moment because concavities can appear and disappear while the whole terrain is deforming by un-doing other events. As a consequence at each time step where an un-do event ends we have to detect this kind of event and propose it to the user. We will call this kind of event Dynamic event as they only exist at a given proposition. In addition events such as un-Fold are not always detectable and must be given to the hand of the user. That is why will we give him the opportunity to add its own Dynamic events when choosing among the list of possible events. Those events will be denominated as User Events.\\\\
+ \begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.3]{unitDescriptionEdit.png}
+	\caption{Geological unit representation}
+\end{figure}
 
-Now that we presented how to schedule the events we will propose a method to build the list  at each proposing step. The first proposal will contain the events of the Event Graph which do not have any other event depending on them and respect their un-doing precondition, meaning that they are likely to be the last events that occured in the time direct way, thus to be the first events to un-do. Then we add the detected dynamic events and the user ones and we obtain our first proposal. Starting this first list the user makes its event choice and we wait until the choosen events end. We then have to generate a new list of possible event. To do so we will add the events which our previously choosed event depended on and which respect their precondition, meaning that we will propose events which occured before (in the time direct way) the event we just un-did. Then we add our Dynamic and User event and we completed our list. Then we just proceed this way until the list of possible event is empty or until the user wishes it.\\\\\
+Thus we must deduce those structure from the input vpaint file. \\\\\
+To do so we use the colors of our edges and faces. When importing the drawing we first ask to the user to give the different time period for each material exisiting in the cross section. Then we will build our blocks by adding succefully all the unit of each layer starting the youngest ones to the oldest. We do this sort in order to simplify the block creation and minimize the number of block created during this phase. Moreover when adding a new unit we try to find one already added unit which share either one portion of its upper bound  or its bottom bound with it. If we can't find one matching unit we place it in a new block. If we find one or several sharing units we deduce that they are all part of the same block so we store them in one unique block. If we do the sort like previously enonced we will thus reduce the number of block created because the only cases where we create blocks are either when the newly added unit is a surface unit or is unit located in a different block than the previously added ones.\\\\
 
-However by proceeding this way the list of possible will be very big at each proposal in average. That's why we have to cut branches of the Story Tree by erasing events which have a little probability to occur and encourage the user to explore the branch which have the biggest probability to occur; thus we propose a branch and bound method to the user to explore the different scenarios of our cross section restoration.\\\\
+When we have all our blocks created in our internal stucture we can identify the fault by looking at the color of the edges. If it is different than black or wite then it correspond to a fault which are caractarised by they color. The units are caracterized by their face color and their upper and bottom bounds which are drawn in white for most of them. Cross section border are usually drawn in black but we can deduce automatically which edge belongs to the lacking bound (limitation it is not always good).\\\\
 
-As a consequence we must build evaluation function for each proposed event which will return its probabilty to occur. Here is some example of what can be an evaluation function for our geological case:\\\\
-
- - Un-fault: We compute the side length of each of the two blocks' units which are in contact at the fault. The little the sum of the differences of each same material unit side length is the greater is the probability for the un-fault event to occur. It is justified by the fact that when a fault is closing it is done almost instantly with all the matching units facing each other\\\\
+We then have all the different material age, the blocks and units objects and the different fault we can find in the drawing. We will store all these information into a configuaration file .geo which will allow the user to save time by not giving the material information each times he opens the file. We have to note that in the input XML file, faces have an arbitrary cycling orientation which can be clockwise or counterclockwise. That's why but for building and manipulating our structure more easelly we will choose the convention that all our units will be first read clockwiselly. Thus we reverse the faces which are written counterclockwisely\\\\
  
- - Un-eroding a concavity: the wider the concavity is the greater the probability of occurrence is for this event. It is justified by the fact that keeping units having the same thickness on all their length is important to go back in time because at the restoration time they have the same thickness every where for the same material. Thus big eroded part must be the first ones to un-erode in order to assure the success of the simulation.\\\\
  
 \chapter{Implementation}
 
@@ -672,7 +724,7 @@ h(t) = (2*t^3 - 3*t^2 + 1)*P_0 + (t^3 - 2*t^2 + t)*T_0 + (t^3 -t^2)*T_1 +(3*t^2 
 It is possible to multiply the tangent by a bias factor which will make the curvature of the curve varying more when this factor becomes big.\\\\\
 
 Collisions methods: \\
-
+%TODO add friction
 Collisions between blocks. Each layer is delimited by its boundaries which we devide into four parts: upper interlayer, bottom interlayer, right side and left side. Each of these part are composed of segments and the union of all of them is a closed polygon. We deal with block collision by computing particle (circle) segments collision. Moreover for each particle of one block we consider the segement built by the particle position at time $t - dt$ and its position at time $t$ and we check if this segment crosses one of the other blocks segment border. In addition, with this we can also check for collision inside the block it self which is usefull to give reallistic results for un sedimentation for instance. This technique as the advantage of determinig precisely the segment with which the particle collided even if the particle went through the colliding block. However there is still a chance to fail at identifying a collision depending on the order we treat each block animation and collision detection.\\
 In order to check intersection between segments we proceed the following way:\\
 Given two sgements $[PQ]$ and $[RS]$ we will consider a parametrisation of their equations: 
