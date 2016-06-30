@@ -43,8 +43,8 @@
 	 \begin{itemize}
 	 \item Retrieve terrains's history
 	 \item Date geological events. Better understand terrain formation
-	 \item Analyse geological sketches 
 	 \item Identify areas where oil and other ressources are trapped
+	 \item Analyse geological sketches 
 	 \end{itemize}
 	 	\begin{figure}[H]
 	\centering
@@ -59,9 +59,9 @@
 	\item Cross Section Restoration process
 	\setbeamertemplate{itemize item}[ball]
 	\item Retrieve the history of a cross section (Geological Events)
-	\item Different kind of events to un-do:\\ 
+	\item Different kinds of events to un-do:\\ 
 	\begin{itemize}
-		\item sedimentation, erosion, foldings, faulting
+		\item sedimentation, erosion, folding, faulting
 	\end{itemize}
 	\begin{figure}[H]
 	\centering
@@ -79,7 +79,7 @@
 	\begin{itemize}
 	\item Event Graph generation, detect and rank events (automatic)
 	\item Backward simulation using mass-spring systems (automatic)
-	\item Story graph generation, create and simulate restoration scenarios (interactive)
+	\item Story tree generation, create and simulate restoration scenarios (interactive)
 	\end{itemize}
     \end{frame}	
 	
@@ -138,7 +138,7 @@
 	\begin{frame}
 	\frametitle{Physically-based methods}
 	\begin{itemize}
-	\item Run mecanical simulation over an input section
+	\item Run mechanical simulation over an input section
 	\item Use finite elements methods with Coulomb theory
 	\item Two kinds: Forward and Backward simulations
 	\end{itemize}
@@ -222,8 +222,8 @@
 		\end{itemize}
 	\item Graphics methods:
 	\begin{itemize}
-	\item Not automatic method (no events porposed)
-	\item No animation $\longrightarrow$ no coherence guatantee
+	\item Not automatic method (no events proposed)
+	\item No animation $\longrightarrow$ no coherence guarantee
 	\item Takes time to draw multiple scenarios
 	\end{itemize}
 	\end{itemize}
@@ -240,40 +240,13 @@
        
 	\begin{frame}
 	\frametitle{Our method: processing pipeline}
-	\begin{columns}
-	\begin{column}{0.58\textwidth}
-	  \scalebox{0.85}{
-	  \hspace*{0.1cm}
-	\begin{algorithm}[H]
-	 \KwData{Input cross section}
-	 \KwResult{Cross section history forward animation }
-	 Extract geological and topological data from the input (automatic)\;
-	 Map mass-spring system on the cross section (automatic)\;
-	 Detect and rank events to un-do: Event Graph Generation (automatic)\;
-	 \eIf{chooseEvent(t,storyTree)}{generateForwardAnimation(storyTree)}{\Return\;}
-
-	 \caption{Restoration process}
-	\end{algorithm}
-	}
-	\end{column}
-	\begin{column}{0.62\textwidth}
-	\scalebox{0.72}{
-	\begin{algorithm}[H]
-	\DontPrintSemicolon 
-	\KwIn{$t$ a time step, storyTree the story tree the user is building}
-	\KwOut{restoration success boolean}
-	System generate a list of possible event to un-do\;
-	\If{possibleEventList is empty}{\Return true \;}
-	\eIf{user choose events in the list}{addNode(storyTree,t,possibleEventList)\;addEdge(storyTree,t,choosenEvents)\;
-	SimulateBackward(choosenEvents)\;
-	\eIf{chooseEvent($t + 1$, storyTree)}{\Return true\;}{\Return chooseEvent($t$, storyTree)\;}}
-	{\Return false\;}
-	\caption{chooseEvent}
-	\end{algorithm}
-	}
-	\end{column}
-	\end{columns}
-	\end{frame}
+	\begin{itemize}
+	\item Geological and topological data extraction from input section (automatic)
+	\item Mass-spring system mapping on cross section (automatic)
+	\item Un-do event detection and ranking $\rightarrow$ stored in Event Graph (automatic)
+	\item User chooses recursively events to un-do which are proposed by our system using the Event Graph and are be backward simulated (mass-spring system + event operators). Backtracking to explore new scenarios $\rightarrow$ stored in Story Tree
+	\end{itemize}
+	\end{frame}	
 	
 	\begin{frame}
 	\frametitle{General Pipeline}
@@ -286,8 +259,31 @@
 	
 
 	
+	
+		
 	\begin{frame}
-	\frametitle{Geological Events List}
+	\frametitle{Event Graph generation: sketch analysis}
+	\begin{figure}[H]
+	\centering
+	\vspace*{-1cm}
+	\begin{tabular}{@{}cc@{}}
+	\includegraphics[width=.49\textwidth]{geologyStructEdit.png}&
+	\includegraphics[width=.58\textwidth]{chartreusevpaint.png}\\
+	\end{tabular}
+	\label{unfaulteg}
+	\end{figure}
+	\vspace*{-1cm}
+	\begin{itemize}
+	\item Vector Graphics Complex (VGC) as input
+	\item Geological Structure extraction
+	\item Event detection using topological and geological data.
+	\item Organize, schedule events in a graph structure: Event Graph
+	\end{itemize}
+	\footnotetext{Boris Dalstein and al. Vector graphics complexes. ACM transactions on Graphics, Proceedings of ACM SIGGRAPH}
+	\end{frame}	
+	
+	\begin{frame}
+	\frametitle{Event Graph generation: geological events}
 	\begin{columns}
 	\begin{column}{0.55\textwidth}
 	\begin{figure}[H]
@@ -332,27 +328,6 @@
 	\end{figure}
 	\end{column}
 	\end{columns}
-	\end{frame}	
-		
-	\begin{frame}
-	\frametitle{Event Graph generation : sketch analysis}
-	\begin{figure}[H]
-	\centering
-	\vspace*{-1cm}
-	\begin{tabular}{@{}cc@{}}
-	\includegraphics[width=.49\textwidth]{geologyStructEdit.png}&
-	\includegraphics[width=.58\textwidth]{chartreusevpaint.png}\\
-	\end{tabular}
-	\label{unfaulteg}
-	\end{figure}
-	\vspace*{-1cm}
-	\begin{itemize}
-	\item Vector Graphics Complex (VGC) as input
-	\item Geological Structure extraction
-	\item Event detection using topological and geological data.
-	\item Organize, schedule events in a graph structure: Event Graph
-	\end{itemize}
-	\footnotetext{Boris Dalstein and al. Vector graphics complexes. ACM transactions on Graphics, Proceedings of ACM SIGGRAPH}
 	\end{frame}			
 	
 	\begin{frame}
@@ -360,7 +335,7 @@
 	\begin{itemize}
 	\item Store all events that are identifiable at the input Cross section state
 	\item Create time dependences bewteen them (first ranking)
-	\item Add probability of occurence for each event $\longrightarrow$ computed with evalutation functions (second ranking)
+	\item Add probability of occurrence for each event $\longrightarrow$ computed with evalutation functions (second ranking)
 	\item Evaluation functions depend on each event they are applied on (eg: fault and erosion).
 	\end{itemize}
 	\end{frame}
@@ -381,7 +356,7 @@
 	\begin{column}{0.55\textwidth}
 	\begin{itemize}
 	\item Oriented edges represent a time dependency between the pointed event and the pointing one
-	\item The pointed event occured after the pointing one
+	\item The pointed event occurred before the pointing one
 	\item We will first un-do events with no incomming edges
 	\end{itemize}
 	\end{column}
@@ -487,9 +462,9 @@
 	\begin{frame}
 	\frametitle{Story Tree Generation}
 	\begin{itemize}
-	\item Recursion process: User choose events to un-do among a list a possible events to simulate $\longrightarrow$ simulation
+	\item Recursion process: User chooses events to un-do among a list a possible events to simulate $\longrightarrow$ simulation
 	\item User can backtrack, continue or stop with the desired restoration
-	\item System generate possible events list at step $t$: event with no time dependencies at time $t$ + dynamic events (un-erode for instance) + user events (un-fold).
+	\item System generates possible events list at step $t$: event with no time dependencies at time $t$ + dynamic events (un-erode for instance) + user events (un-fold).
 	\item Process encoded into a Story Tree:
 	\begin{itemize}
 	\item Story Node $\longrightarrow$ possible events list
@@ -779,20 +754,36 @@
 	%chartreuse bac? %more unit test?
 	\begin{itemize}
 	\item Restoration of Chartreuse cross-section
-	\item Validation done by geologists 
+	\item Complex example $\rightarrow$ divided into two parts to validate our restoration system
 	\end{itemize}
 	\begin{figure}[H]
 	\centering
-	\href{chartreuseDroite-rev.mp4}
-{\includegraphics[width=.65\textwidth]{chartreusedroite0.png}}
+	\href{chartreusedoite.flv}
+	{\includegraphics[width=.45\textwidth]{chartreusedroite0.png}}
+	\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\href{chartreusedoite-rev.mp4}
+	{\fbox{\includegraphics[width=.45\textwidth]{chartreusedroite10.png}}}
 	\end{figure}
 	\end{frame}
 	
 	\begin{frame}
-	\frametitle{Limitation}
+	\frametitle{Result validation}
+	\begin{itemize}
+	\item Iterative process by sharing our result with geologists
+	\item Cross section analysis and Event Graph generation validated. VGC structure allowed us to detect all topological and geological relations we needed.
+	\item Animation system works but can be improved. Some geological constraints are not yet taken into account.
+	\item Interactive storytelling process has been validated. Geologists can explore alternative paths.
+	\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+	\frametitle{Limitations}
 	%chartreuse bac? %more unit test?
 	\begin{itemize}
-	\item More validation should be done. Use more complex example like Chartreuse.
+	\item Tested on only one example
 	\item Improve event operators to force layer thickness conservation 
 	\item Mass-spring systems might not be the most suitable animation system for our context $\longrightarrow$ use more geometrical algorithm
 	\end{itemize}
@@ -801,9 +792,10 @@
 	\begin{frame}
 	\frametitle{Future work}
 	\begin{itemize}
-	\item Take into account more geological events such as compaction or completly eroded materials
-	\item Extend our space dimension to 3D $\longrightarrow$ take into account events such as Strike-slip faults
-	\item Use and extend this storytelling process in other fields where storyboards are used (video games, cartoons)
+	\item Take into account more geological events (compaction, completly eroded materials) and more complex scenarios.
+	\item Story tree construction for cross-sections interpolation (2.5D). 
+	\item Story tree construction for 3D restoration.
+	\item Use and extend this storytelling process in other fields where storyboards can be used (archeology, astrophysics)
 	\end{itemize}
 	\end{frame}
 	
@@ -812,12 +804,53 @@
 	%chartreuse bac? %more unit test?
 	\begin{itemize}
 	\item New Storytelling based method for cross section restoration
-	\item Use two graphs, Event (ranking) and Story (proposing) graph, for the storytelling process
-	\item Proposed animation model using mass-springs systems. Created geological event simulation operators
-	\item Proof of concept has been validated by geologists (Chartreuse and unit tests) and should be explored further.
+	\item Use two graphs, Event and Story graph, for the storytelling process
+	\item Backward simulation of geological events  using mass-springs model
+	\item Proof of concept has been validated by geologists and should be explored further
 	\end{itemize}
 	\end{frame}
-	
 
+	\begin{frame}
+	\begin{center}
+	\textbf{Thank you for your attention}
+	\end{center}
+	\end{frame}
+
+\begin{frame}
+	\frametitle{Our method: processing pipeline}
+	\begin{columns}
+	\begin{column}{0.58\textwidth}
+	  \scalebox{0.85}{
+	  \hspace*{0.1cm}
+	\begin{algorithm}[H]
+	 \KwData{Input cross section}
+	 \KwResult{Cross section history forward animation }
+	 Extract geological and topological data from the input (automatic)\;
+	 Map mass-spring system on the cross section (automatic)\;
+	 Detect and rank events to un-do: Event Graph Generation (automatic)\;
+	 \eIf{chooseEvent(t,storyTree)}{generateForwardAnimation(storyTree)}{\Return\;}
+
+	 \caption{Restoration process}
+	\end{algorithm}
+	}
+	\end{column}
+	\begin{column}{0.62\textwidth}
+	\scalebox{0.72}{
+	\begin{algorithm}[H]
+	\DontPrintSemicolon 
+	\KwIn{$t$ a time step, storyTree the story tree the user is building}
+	\KwOut{restoration success boolean}
+	System generate a list of possible event to un-do\;
+	\If{possibleEventList is empty}{\Return true \;}
+	\eIf{user choose events in the list}{addNode(storyTree,t,possibleEventList)\;addEdge(storyTree,t,choosenEvents)\;
+	SimulateBackward(choosenEvents)\;
+	\eIf{chooseEvent($t - 1$, storyTree)}{\Return true\;}{\Return chooseEvent($t$, storyTree)\;}}
+	{\Return false\;}
+	\caption{chooseEvent}
+	\end{algorithm}
+	}
+	\end{column}
+	\end{columns}
+	\end{frame}
 	
 \end{document}

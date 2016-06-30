@@ -1,0 +1,97 @@
+\documentclass[12pt, a4paper]{memoir} % for a short document
+\usepackage[english]{babel}
+\usepackage{blindtext}
+\usepackage [vscale=0.76,includehead]{geometry}              
+\usepackage{fullpage}
+\usepackage{subcaption}
+\usepackage{mathptmx} % font = times
+\usepackage{helvet} % font sf = helvetica
+\usepackage[latin1]{inputenc}
+\usepackage{relsize}
+\setsecnumdepth{subsection}
+%\setcounter{secnumdepth}{3}
+\usepackage{tocloft}
+%\def\cftchapteraftersum{.}
+\oddsidemargin 0.0cm  
+\evensidemargin 0.0cm  
+\textwidth 17cm 
+%\topmargin -1cm 
+\textheight 23.5cm
+%\addtolength\headheight{16pt} 
+\usepackage{graphicx}
+\usepackage{float} 
+\usepackage{multimedia}
+\usepackage{amsmath,amssymb}
+\usepackage{listings}
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+%\usepackage[nottoc, notlof, notlot]{tocbibind}
+\usepackage{amsfonts}
+\usepackage{amsmath,bm}
+\usepackage{cite}
+\lstset{
+  numbers=left,   
+  firstnumber=1,
+  numberfirstline=true,
+  language=C, 
+  frame=L
+  } 
+\pagestyle{book}
+\bibliographystyle{plain}
+
+% Title page formatting -- do not change!
+\pretitle{\HUGE\sffamily \bfseries\begin{center}} 
+\posttitle{\end{center}}
+\preauthor{\LARGE  \sffamily \bfseries\begin{center}}
+\postauthor{\par\end{center}}
+
+\newcommand{\jury}[1]{% 
+\gdef\juryB{#1}} 
+\newcommand{\juryB}{} 
+\newcommand{\session}[1]{% 
+\gdef\sessionB{#1}} 
+\newcommand{\sessionB}{} 
+\newcommand{\option}[1]{% 
+\gdef\optionB{#1}} 
+\newcommand{\optionB}{} 
+
+\renewcommand{\maketitlehookd}{% 
+\vfill{}  \large\par\noindent  
+\begin{center}\juryB \bigskip\sessionB\end{center}
+\vspace{-1.4cm}}
+\renewcommand{\maketitlehooka}{% 
+\vspace{-1.4cm}\noindent\includegraphics[height=14ex]{logoINP.png}\hfill\raisebox{2ex}{\includegraphics[height=7ex]{logoUJF.jpg}}\\
+\bigskip
+\begin{center} \large
+Master of Science in Informatics at Grenoble \\
+Master Math\'ematiques Informatique - sp\'ecialit\'e Informatique \\ 
+option \optionB  \end{center}\vfill}
+% End of title page formatting
+
+\option{$<$GVR$>$}
+\title{ Inverse Procedural Generation of Geological Stories}
+\author{Garcia Maxime}
+\date{ $<$June 23rd 2016$>$} % Delete this line to display the current date
+\jury{
+Research project performed at $<$INRIA Monbonnot$>$ \\\medskip
+Under the supervision of:\\
+$<$Dr. R\'emi Ronfard ,INRIA$>$\\\medskip
+Defended before a jury composed of:\\
+$[$Mr$]$ $<$George-Pierre Bonneau$>$\\
+$[$Mr$]$ $<$James Crowley$>$\\
+$[$Mr$]$ $<$Edmond Boyer$>$\\
+$[$Mr$]$ $<$Jean-S\'ebastien Franco$>$\\
+$[$Mr$]$ $<$Dominique Vaufreydaz$>$\\
+$[$Mrs$]$ $<$Catherine Berrut$>$\\
+
+}
+\session{$[$June$]$\hfill 2016}
+
+
+\begin{document}
+\selectlanguage{english}
+\frontmatter
+\begin{titlingpage}
+\maketitle
+\end{titlingpage}
+\end{document}
